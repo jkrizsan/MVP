@@ -68,6 +68,7 @@ namespace MVP.Services
             }
 
             context.Products.Add(product);
+            context.SaveChanges();
             return true;
         }
 

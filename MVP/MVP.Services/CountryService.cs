@@ -70,6 +70,7 @@ namespace MVP.Services
             }
 
             context.Countries.Add(country);
+            context.SaveChanges();
             return true;
         }
 
