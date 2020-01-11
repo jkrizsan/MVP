@@ -1,0 +1,14 @@
+
+*.lock
+MVP/.vs/MVP/v16/.suo
+*.ide
+*.ide-shm
+*.ide-wal
+*.testlog
+*.manifest
+MVP/Data/bin/Debug/netstandard2.0/Data.deps.json
+*.dll
+*.pdb
+*.exe
+*.cache
+MVP/MVP/obj/Debug/netcoreapp3.0/MVP.csproj.FileListAbsolute.txt
