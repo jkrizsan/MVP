@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVP.Services", "MVP.Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVP.InitializeDataBase", "MVP.InitializeDataBase\MVP.InitializeDataBase.csproj", "{9EF22CD5-C2AC-44E8-AD17-31765294A194}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVP.API", "MVP.API\MVP.API.csproj", "{E4410BCA-D295-43E7-A924-6532C235E794}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVP.API", "MVP.API\MVP.API.csproj", "{E4410BCA-D295-43E7-A924-6532C235E794}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

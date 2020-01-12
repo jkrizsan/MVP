@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MVP.API.Helpers;
 using MVP.Data;
 using MVP.Services;
 
@@ -31,6 +32,8 @@ namespace MVP.API
             services.AddControllers();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<IInvoiceDataHelper, InvoiceDataHelper>();
+            services.AddScoped<IInvoiceCreatorHelper, InvoiceCreatorHelper>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>

@@ -10,6 +10,7 @@ namespace MVP.API
         public string Country { get; set; }
         public string InvoiceFormat { get; set; }
         public string SendEmail { get; set; }
+        [EmailAddress]
         public string EmailAddress { get; set; }
         public InvoiceRequestDto()
         {

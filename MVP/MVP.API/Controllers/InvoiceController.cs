@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MVP.API.DTOs;
+using MVP.API.Helpers;
 using MVP.Services;
 
 namespace MVP.API.Controllers
@@ -13,14 +15,14 @@ namespace MVP.API.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly ILogger<InvoiceController> logger;
-        private readonly ICountryService countryService;
-        private readonly IProductService productService;
-        public InvoiceController(ILogger<InvoiceController> logger,
-            ICountryService countryService, IProductService productService)
+        private readonly IInvoiceDataHelper invoiceDataHelper;
+        private readonly IInvoiceCreatorHelper invoiceCreatorHelper;
+
+        public InvoiceController(ILogger<InvoiceController> logger, IInvoiceDataHelper invoiceDataHelper, IInvoiceCreatorHelper invoiceCreatorHelper)
         {
             this.logger = logger;
-            this.countryService = countryService;
-            this.productService = productService;
+            this.invoiceDataHelper = invoiceDataHelper;
+            this.invoiceCreatorHelper = invoiceCreatorHelper;
         }
 
         [HttpGet]
@@ -35,44 +37,21 @@ namespace MVP.API.Controllers
         }
 
         [HttpPost]
-        public string Post([FromBody]InvoiceRequestDto invoiceDto)
+        public string Post([FromBody]InvoiceRequestDto requestDto)
         {
-            if (invoiceDto is null)
+            if (requestDto is null)
             {
                 throw new ArgumentNullException($"Method name: {nameof(Post)}");
             }
-            InvoiceResponseDto responseDto = new InvoiceResponseDto();
-            var ret = "";
-            var country = countryService.GetCountryByName(invoiceDto.Country);
-            if(country is null)
+            InvoiceResponseDto responseDto = invoiceDataHelper.CheckAndParseInvoice(requestDto);
+            if(responseDto.ErrorMessage?.Length > 0)
             {
-                return $"Error: {invoiceDto.Country} country does not supported!";
-            }
-            responseDto.Country = country;
-            if (invoiceDto.Products is null || invoiceDto.Products.Count.Equals(0))
-            {
-                return "Error: Please give one or more products!";
-            }
-            if (invoiceDto.SendEmail.Equals("True") && string.IsNullOrEmpty(invoiceDto.EmailAddress))
-            {
-                return "Error: Please give a valid Email Address!";
+                return responseDto.ErrorMessage;
             }
 
-            foreach (var p in invoiceDto.Products)
-            {
-                var prod = productService.GetProductByName(p.Name);
-                if(prod is null)
-                {
-                    return $"Error: {p.Name} product does not supported!";
-                }
-                for (int i = 0; i < p.Quantity; i++)
-                {
-                    responseDto.Products.Add(prod);
-                }
-            }
+            var response = invoiceCreatorHelper.CreateInvoice(responseDto);
 
-            ret = invoiceDto.ToString();
-            return ret; // invoice.Temperature.ToString();
+            return response; // invoice.Temperature.ToString();
         }
     }
 }
