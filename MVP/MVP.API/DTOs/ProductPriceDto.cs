@@ -8,13 +8,8 @@ namespace MVP.API.DTOs
 {
     public class ProductPriceDto
     {
-        public Product Product { get; set; }
+        public string Name { get; set; }
         public double Price { get; set; }
         public double Tax { get; set; }
-
-        public ProductPriceDto(Product product)
-        {
-            Product = product;
-        }
     }
 }

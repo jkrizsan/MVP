@@ -34,6 +34,7 @@ namespace MVP.API
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IInvoiceDataHelper, InvoiceDataHelper>();
             services.AddScoped<IInvoiceCreatorHelper, InvoiceCreatorHelper>();
+            services.AddScoped<IEmailHelper, EmailHelper>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>

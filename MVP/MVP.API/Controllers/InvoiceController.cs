@@ -17,12 +17,14 @@ namespace MVP.API.Controllers
         private readonly ILogger<InvoiceController> logger;
         private readonly IInvoiceDataHelper invoiceDataHelper;
         private readonly IInvoiceCreatorHelper invoiceCreatorHelper;
+        private readonly IEmailHelper emailHelper;
 
-        public InvoiceController(ILogger<InvoiceController> logger, IInvoiceDataHelper invoiceDataHelper, IInvoiceCreatorHelper invoiceCreatorHelper)
+        public InvoiceController(ILogger<InvoiceController> logger, IInvoiceDataHelper invoiceDataHelper, IInvoiceCreatorHelper invoiceCreatorHelper, IEmailHelper emailHelper)
         {
             this.logger = logger;
             this.invoiceDataHelper = invoiceDataHelper;
             this.invoiceCreatorHelper = invoiceCreatorHelper;
+            this.emailHelper = emailHelper;
         }
 
         [HttpGet]
@@ -50,6 +52,11 @@ namespace MVP.API.Controllers
             }
 
             var response = invoiceCreatorHelper.CreateInvoice(responseDto);
+
+            if (responseDto.SendEmail)
+            {
+                emailHelper.SendMail(response, responseDto.EmailAddress);
+            }
 
             return response; // invoice.Temperature.ToString();
         }

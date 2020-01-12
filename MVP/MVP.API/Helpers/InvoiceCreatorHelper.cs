@@ -29,7 +29,16 @@ namespace MVP.API.Helpers
 
         private string BuildJSONInvoice(InvoiceResponseDto responseDto)
         {
-            string result = JsonConvert.SerializeObject(responseDto);
+            string result = "";
+
+            try
+            {
+                result = JsonConvert.SerializeObject(responseDto);
+            }
+            catch (Exception e)
+            {
+                result = $"JSON format exception: {e.Message}";
+            }
 
             return result;
         }

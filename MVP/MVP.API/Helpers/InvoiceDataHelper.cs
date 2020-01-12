@@ -22,7 +22,7 @@ namespace MVP.API.Helpers
         private void ParseSendEmailAndEmailAddress(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
         {
             responseDto.SendEmail = requestDto.SendEmail.ToLowerInvariant()
-                .Equals("True") ? true : false;
+                .Equals("true") ? true : false;
 
             if (responseDto.SendEmail && string.IsNullOrEmpty(requestDto.EmailAddress))
             {
@@ -66,7 +66,11 @@ namespace MVP.API.Helpers
                 }
                 for (int i = 0; i < p.Quantity; i++)
                 {
-                    responseDto.ProductPricess.Add(new ProductPriceDto(prod));
+                    var pp = new ProductPriceDto();
+                    pp.Name = prod.Name;
+                    pp.Tax = (prod.Price * responseDto.Country.Tax) / 100.0;
+                    pp.Price = prod.Price + pp.Tax;
+                    responseDto.ProductPricess.Add(pp);
                 }
             }
 
@@ -85,14 +89,8 @@ namespace MVP.API.Helpers
 
         private void SetPricesAndTaxes(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
         {
-            foreach (var pp in responseDto.ProductPricess)
-            {
-                pp.Tax = (pp.Product.Price * responseDto.Country.Tax) / 100.0;
-                pp.Price = pp.Product.Price + pp.Tax;
-            }
-
-            responseDto.TotalTaxes = responseDto.ProductPricess.Select(x => x.Tax).ToList().Sum();
-            responseDto.TotalPrices = responseDto.ProductPricess.Select(x => x.Price).ToList().Sum();
+            responseDto.TotalTaxes = Math.Round(responseDto.ProductPricess.Select(x => x.Tax).ToList().Sum(), 2);
+            responseDto.TotalPrices = Math.Round(responseDto.ProductPricess.Select(x => x.Price).ToList().Sum(), 2);
         }
 
         #endregion Check And Parse Invoice Datas
@@ -103,8 +101,8 @@ namespace MVP.API.Helpers
 
             ParseSendEmailAndEmailAddress(requestDto, responseDto);
             ParseInvoiceFormat(requestDto, responseDto);
-            ParseProduct(requestDto, responseDto);
             ParseCountry(requestDto, responseDto);
+            ParseProduct(requestDto, responseDto);
             SetPricesAndTaxes(requestDto, responseDto);
 
             return responseDto;
