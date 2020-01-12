@@ -12,8 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MVP.Data;
+using MVP.Services;
 
-namespace MVP
+namespace MVP.API
 {
     public class Startup
     {
@@ -28,11 +29,12 @@ namespace MVP
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICountryService, CountryService>();
+
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Connection")));
-
-            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

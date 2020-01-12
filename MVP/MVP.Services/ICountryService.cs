@@ -5,11 +5,11 @@ using System.Text;
 
 namespace MVP.Services
 {
-    interface ICountryService
+    public interface ICountryService
     {
         bool SetNewCountry(Country country);
-        Product GetCountryById(int id);
-        Product GetCountryByName(string name);
+        Country GetCountryById(int id);
+        Country GetCountryByName(string name);
         void RemoveCountry(Country country);
         void RemoveCountryById(int id);
     }

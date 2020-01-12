@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MVP.Services
 {
-    public class CountryService
+    public class CountryService : ICountryService
     {
         MVPContext context;
 

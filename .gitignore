@@ -12,3 +12,4 @@ MVP/Data/bin/Debug/netstandard2.0/Data.deps.json
 *.exe
 *.cache
 MVP/MVP/obj/Debug/netcoreapp3.0/MVP.csproj.FileListAbsolute.txt
+MVP/.vs/MVP/DesignTimeBuild/.dtbcache
