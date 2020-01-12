@@ -23,7 +23,6 @@ namespace MVP.API.Helpers
 
         private string BuildHTMLInvoice(InvoiceResponseDto responseDto)
         {
-       
             throw new NotImplementedException();
         }
 

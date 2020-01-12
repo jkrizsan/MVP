@@ -14,14 +14,12 @@ namespace MVP.API.Controllers
     [Route("[controller]")]
     public class InvoiceController : ControllerBase
     {
-        private readonly ILogger<InvoiceController> logger;
         private readonly IInvoiceDataHelper invoiceDataHelper;
         private readonly IInvoiceCreatorHelper invoiceCreatorHelper;
         private readonly IEmailHelper emailHelper;
 
-        public InvoiceController(ILogger<InvoiceController> logger, IInvoiceDataHelper invoiceDataHelper, IInvoiceCreatorHelper invoiceCreatorHelper, IEmailHelper emailHelper)
+        public InvoiceController( IInvoiceDataHelper invoiceDataHelper, IInvoiceCreatorHelper invoiceCreatorHelper, IEmailHelper emailHelper)
         {
-            this.logger = logger;
             this.invoiceDataHelper = invoiceDataHelper;
             this.invoiceCreatorHelper = invoiceCreatorHelper;
             this.emailHelper = emailHelper;
