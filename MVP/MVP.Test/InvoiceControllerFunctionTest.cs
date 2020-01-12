@@ -128,5 +128,25 @@ namespace MVP.Test
             var response = invoiceController.Post(request);
             Assert.IsTrue(response.Contains("Error: Please give a valid Email Address!"));
         }
+
+        [Test]
+        public void InvoiceController_BadInvoiceFormat()
+        {
+            var request = new InvoiceRequestDto()
+            {
+                Products = new List<ProductDto>()
+                {
+                    new ProductDto(){Name = "Apple", Quantity = 2},
+                    new ProductDto(){Name = "Pizza", Quantity = 3}
+                },
+                Country = "Hungary",
+                InvoiceFormat = "TEST",
+                SendEmail = "true",
+                EmailAddress = "something@something.com"
+            };
+            var response = invoiceController.Post(request);
+
+            Assert.IsTrue(response.Contains("Error: TEST invoice format does not supported!"));
+        }
     }
 }

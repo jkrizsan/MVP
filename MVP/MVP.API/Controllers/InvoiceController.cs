@@ -25,17 +25,6 @@ namespace MVP.API.Controllers
             this.emailHelper = emailHelper;
         }
 
-        [HttpGet]
-        public IEnumerable<InvoiceRequestDto> Get()
-        {
-            var rng = new Random();
-            return Enumerable.Range(1, 1).Select(index => new InvoiceRequestDto
-            {
-                Country = "Finland"
-            })
-            .ToArray();
-        }
-
         [HttpPost]
         public string Post([FromBody]InvoiceRequestDto requestDto)
         {
