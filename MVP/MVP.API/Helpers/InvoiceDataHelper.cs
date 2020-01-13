@@ -30,7 +30,6 @@ namespace MVP.API.Helpers
                 return;
             }
             responseDto.EmailAddress = requestDto.EmailAddress;
-            
         }
 
         private void ParseInvoiceFormat(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)

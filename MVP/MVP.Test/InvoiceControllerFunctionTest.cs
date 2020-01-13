@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace MVP.Test
 {
-    public class Tests
+    public class InvoiceControllerTests
     {
         private  InvoiceController invoiceController;
 

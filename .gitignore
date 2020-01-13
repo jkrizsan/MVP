@@ -15,3 +15,4 @@ MVP/MVP/obj/Debug/netcoreapp3.0/MVP.csproj.FileListAbsolute.txt
 MVP/.vs/MVP/DesignTimeBuild/.dtbcache
 *.tmp
 MVP/MVP.Test/bin/Debug/netcoreapp3.0/nunit_random_seed.tmp
+*.tmp
