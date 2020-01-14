@@ -35,6 +35,7 @@ namespace MVP.API
             services.AddScoped<IInvoiceDataHelper, InvoiceDataHelper>();
             services.AddScoped<IInvoiceCreatorHelper, InvoiceCreatorHelper>();
             services.AddScoped<IEmailHelper, EmailHelper>();
+            services.AddScoped<IOrderHelper, OrderHelper>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>
@@ -50,11 +51,8 @@ namespace MVP.API
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -14,14 +14,9 @@ namespace MVP.API
         public InvoiceFormat InvoiceFormat { get; set; }
         public bool SendEmail { get; set; }
         public string EmailAddress { get; set; }
-
         public double TotalPrices { get; set; }
-
         public double TotalTaxes { get; set; }
-
-
         public string ErrorMessage { get; set; }
-
         public InvoiceResponseDto()
         {
             Country = new Country();

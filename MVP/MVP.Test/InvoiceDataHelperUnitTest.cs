@@ -89,7 +89,6 @@ namespace MVP.Test
         {
             var request = new InvoiceRequestDto()
             {
-
                 Country = "Hungary",
                 InvoiceFormat = "JSON",
                 SendEmail = "true",

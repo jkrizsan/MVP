@@ -17,12 +17,14 @@ namespace MVP.API.Controllers
         private readonly IInvoiceDataHelper invoiceDataHelper;
         private readonly IInvoiceCreatorHelper invoiceCreatorHelper;
         private readonly IEmailHelper emailHelper;
+        private readonly IOrderHelper orderHelper;
 
-        public InvoiceController( IInvoiceDataHelper invoiceDataHelper, IInvoiceCreatorHelper invoiceCreatorHelper, IEmailHelper emailHelper)
+        public InvoiceController( IInvoiceDataHelper invoiceDataHelper, IInvoiceCreatorHelper invoiceCreatorHelper, IEmailHelper emailHelper, IOrderHelper orderHelper)
         {
             this.invoiceDataHelper = invoiceDataHelper;
             this.invoiceCreatorHelper = invoiceCreatorHelper;
             this.emailHelper = emailHelper;
+            this.orderHelper = orderHelper;
         }
 
         [HttpPost]
@@ -39,13 +41,14 @@ namespace MVP.API.Controllers
             }
 
             var response = invoiceCreatorHelper.CreateInvoice(responseDto);
+            var order = orderHelper.CreateOrder();
 
             if (responseDto.SendEmail)
             {
                 emailHelper.SendMail(response, responseDto.EmailAddress);
             }
 
-            return response; // invoice.Temperature.ToString();
+            return response;
         }
     }
 }

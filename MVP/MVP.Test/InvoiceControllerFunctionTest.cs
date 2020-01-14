@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace MVP.Test
 {
@@ -30,7 +31,7 @@ namespace MVP.Test
             productService.SetNewProduct(new Product() { Name = "Apple", Price = 100 });
             productService.SetNewProduct(new Product() { Name = "Pizza", Price = 100 });
 
-            invoiceController = new InvoiceController(new InvoiceDataHelper(countryservice, productService), new InvoiceCreatorHelper(), new EmailHelper());
+            invoiceController = new InvoiceController(new InvoiceDataHelper(countryservice, productService), new InvoiceCreatorHelper(), new EmailHelper(), new OrderHelper());
         }
 
         [Test]
@@ -100,7 +101,6 @@ namespace MVP.Test
         {
             var request = new InvoiceRequestDto()
             {
-
                 Country = "Hungary",
                 InvoiceFormat = "JSON",
                 SendEmail = "true",

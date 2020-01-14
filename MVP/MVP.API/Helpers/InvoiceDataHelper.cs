@@ -72,7 +72,6 @@ namespace MVP.API.Helpers
                     responseDto.ProductPricess.Add(pp);
                 }
             }
-
         }
 
         private void ParseCountry(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
@@ -94,6 +93,11 @@ namespace MVP.API.Helpers
 
         #endregion Check And Parse Invoice Datas
 
+        /// <summary>
+        /// Convert request data to response data
+        /// </summary>
+        /// <param name="requestDto"></param>
+        /// <returns></returns>
         public InvoiceResponseDto CheckAndParseInvoice(InvoiceRequestDto requestDto)
         {
             var responseDto = new InvoiceResponseDto();

@@ -31,14 +31,12 @@ namespace MVP.API.Helpers
             result += @$"<table border=1>{Environment.NewLine}";
             result += @$"<thead>{Environment.NewLine}";
             result += @$"<tr>{Environment.NewLine}";
-
             result += @$"<th>Product Name</th>{Environment.NewLine}";
             result += @$"<th>Product Price</th>{Environment.NewLine}";
             result += @$"<th>Product Tax</th>{Environment.NewLine}";
             result += @$"</tr>{Environment.NewLine}";
             result += @$"</thead>{Environment.NewLine}";
             result += @$"<tbody>{Environment.NewLine}";
-
             foreach (var item in responseDto.ProductPricess)
             {
                 result += @$"<tr>{Environment.NewLine}";
@@ -47,14 +45,12 @@ namespace MVP.API.Helpers
                 result += @$"<td>{item.Tax}</td>{Environment.NewLine}";
                 result += @$"</tr>{Environment.NewLine}";
             }
-           
             result += @$"</tbody>{Environment.NewLine}";
             result += @$"</table>{Environment.NewLine}";
 
             result += @$"<table border=1>{Environment.NewLine}";
             result += @$"<thead>{Environment.NewLine}";
-            result += @$"<tr>{Environment.NewLine}";
-                                        
+            result += @$"<tr>{Environment.NewLine}";       
             result += @$"<th>{nameof(responseDto.Country)}</th>{Environment.NewLine}";
             result += @$"<th>{nameof(responseDto.Country.Tax)}</th>{Environment.NewLine}";
             result += @$"<th>{nameof(responseDto.EmailAddress)}</th>{Environment.NewLine}";
@@ -64,7 +60,6 @@ namespace MVP.API.Helpers
             result += @$"</thead>{Environment.NewLine}";
             result += @$"</tbody>{Environment.NewLine}";
             result += @$"<tr>{Environment.NewLine}";
-                       
             result += @$"<td>{responseDto.Country.Name}</td>{Environment.NewLine}";
             result += @$"<td>{responseDto.Country.Tax}</td>{Environment.NewLine}";
             result += @$"<td>{responseDto.EmailAddress}</td>{Environment.NewLine}";
