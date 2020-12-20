@@ -38,7 +38,7 @@ namespace MVP.Services
         {
             if (country is null)
             {
-                throw new ArgumentNullException(nameof(RemoveCountry));
+                throw new ArgumentNullException(nameof(country));
             }
 
             context.Countries.Remove(country);
@@ -59,7 +59,7 @@ namespace MVP.Services
         {
             if (country is null)
             {
-                throw new ArgumentNullException(nameof(SetNewCountry));
+                throw new ArgumentNullException(nameof(country));
             }
 
             var count = GetCountryByName(country.Name);

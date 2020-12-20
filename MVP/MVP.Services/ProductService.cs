@@ -36,7 +36,7 @@ namespace MVP.Services
         {
             if (product is null)
             {
-                throw new ArgumentNullException(nameof(RemoveProduct));
+                throw new ArgumentNullException(nameof(product));
             } 
 
             context.Products.Remove(product);
@@ -57,7 +57,7 @@ namespace MVP.Services
         {
             if (product is null)
             {
-                throw new ArgumentNullException(nameof(SetNewProduct));
+                throw new ArgumentNullException(nameof(product));
             }
 
             var prod = GetProductByName(product.Name);

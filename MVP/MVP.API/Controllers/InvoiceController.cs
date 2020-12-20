@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using MVP.API.DTOs;
 using MVP.API.Helpers;
-using MVP.Services;
 
 namespace MVP.API.Controllers
 {
@@ -32,8 +26,9 @@ namespace MVP.API.Controllers
         {
             if (requestDto is null)
             {
-                throw new ArgumentNullException($"Method name: {nameof(Post)}");
+                throw new ArgumentNullException($"Method name: {nameof(requestDto)}");
             }
+
             InvoiceResponseDto responseDto = invoiceDataHelper.CheckAndParseInvoice(requestDto);
             if(responseDto.ErrorMessage?.Length > 0)
             {
@@ -41,7 +36,6 @@ namespace MVP.API.Controllers
             }
 
             var response = invoiceCreatorHelper.CreateInvoice(responseDto);
-            var order = orderHelper.CreateOrder();
 
             if (responseDto.SendEmail)
             {

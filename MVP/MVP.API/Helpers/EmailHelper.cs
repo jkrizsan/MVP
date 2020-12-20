@@ -9,6 +9,14 @@ namespace MVP.API.Helpers
 {
     public class EmailHelper : IEmailHelper
     {
+        private const string EmailSettings = "EmailSettings";
+        private const string Server = "Server";
+        private const string From = "From";
+        private const string Subject = "Subject";
+        private const string Port = "Port";
+        private const string User = "User";
+        private const string Password = "Password";
+
         public IConfiguration Configuration { get; }
 
         public EmailHelper(IConfiguration Configuration = null)
@@ -17,25 +25,25 @@ namespace MVP.API.Helpers
         }
 
         private string GetMailData(string param)
-            => Configuration.GetSection("EmailSettings").GetSection(param).Value;
+            => Configuration.GetSection(EmailSettings).GetSection(param).Value;
 
         public bool SendMail(string message, string target)
         {
             try
             {
                 MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient(GetMailData("Server"));
-                mail.From = new MailAddress(GetMailData("From"));
+                SmtpClient SmtpServer = new SmtpClient(GetMailData(Server));
+                mail.From = new MailAddress(GetMailData(From));
                 mail.To.Add(target);
-                mail.Subject = GetMailData("Subject");
+                mail.Subject = GetMailData(Subject);
                 mail.Body = message;
 
-                SmtpServer.Port = Convert.ToInt32(GetMailData("Port"));
-                SmtpServer.Credentials = new System.Net.NetworkCredential(GetMailData("User"), GetMailData("Password"));
+                SmtpServer.Port = Convert.ToInt32(GetMailData(Port));
+                SmtpServer.Credentials = new System.Net.NetworkCredential(GetMailData(User), GetMailData(Password));
                 SmtpServer.EnableSsl = true;
                 SmtpServer.Send(mail);
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
