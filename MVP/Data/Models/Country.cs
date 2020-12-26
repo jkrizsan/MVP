@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MVP.Data.Models
+﻿namespace MVP.Data.Models
 {
     public class Country
     {

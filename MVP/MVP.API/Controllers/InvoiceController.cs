@@ -26,7 +26,7 @@ namespace MVP.API.Controllers
         {
             if (requestDto is null)
             {
-                throw new ArgumentNullException($"Method name: {nameof(requestDto)}");
+                throw new ArgumentNullException(nameof(requestDto));
             }
 
             InvoiceResponseDto responseDto = invoiceDataHelper.CheckAndParseInvoice(requestDto);

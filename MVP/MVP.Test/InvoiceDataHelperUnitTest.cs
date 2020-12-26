@@ -4,9 +4,7 @@ using MVP.API.Helpers;
 using MVP.Data.Models;
 using MVP.Services;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MVP.Test
 {

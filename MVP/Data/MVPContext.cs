@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVP.Data.Models;
-using System;
 
 namespace MVP.Data
 {

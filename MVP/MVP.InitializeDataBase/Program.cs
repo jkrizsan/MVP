@@ -2,7 +2,6 @@
 using MVP.Data;
 using MVP.Data.Models;
 using MVP.Services;
-using System;
 
 namespace MVP.InitializeDataBase
 {

@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 
 namespace MVP.Test
 {
