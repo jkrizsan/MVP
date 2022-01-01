@@ -54,3 +54,12 @@ MVP/MVP.Test/obj/Release/netcoreapp3.0/MVP.Test.AssemblyInfo.cs
 MVP/MVP.Test/obj/Release/netcoreapp3.0/MVP.Test.csproj.CopyComplete
 MVP/MVP.Test/obj/Release/netcoreapp3.0/MVP.Test.csproj.FileListAbsolute.txt
 MVP/.vs/MVP/DesignTimeBuild/.dtbcache.v2
+/test.postman_collection.json
+/MVP/Data/bin/Debug/netstandard2.0/MVP.Data.deps.json
+/MVP/MVP.API/bin/Debug/netcoreapp3.0
+/MVP/MVP.InitializeDataBase/bin/Debug/netcoreapp3.0
+/MVP/MVP.Test/bin/Debug/netcoreapp3.0
+/MVP/MVP.API/obj/Debug/netcoreapp3.0/MVP.API.csproj.CopyComplete
+/MVP/MVP.API/obj/Debug/netcoreapp3.0/MVP.API.GeneratedMSBuildEditorConfig.editorconfig
+/MVP/.vs/MVP/config/debuggerConfiguration-e4410bca-d295-43e7-a924-6532c235e794.json
+/MVP/.vs/MVP
