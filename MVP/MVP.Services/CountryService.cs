@@ -18,11 +18,13 @@ namespace MVP.Services
 
         #region Get
 
+        /// <inheritdoc />
         public Country GetCountryById(int id)
         {
             return context.Countries.Where(p => p.Id.Equals(id)).SingleOrDefault();
         }
 
+        /// <inheritdoc />
         public Country GetCountryByName(string name)
         {
             return context.Countries.Where(p => p.Name.Equals(name)).SingleOrDefault();
@@ -32,6 +34,7 @@ namespace MVP.Services
 
         #region Remove
 
+        /// <inheritdoc />
         public void RemoveCountry(Country country)
         {
             if (country is null)
@@ -43,6 +46,7 @@ namespace MVP.Services
             context.SaveChanges();
         }
 
+        /// <inheritdoc />
         public void RemoveCountryById(int id)
         {
             var country = GetCountryById(id);
@@ -53,6 +57,7 @@ namespace MVP.Services
 
         #region Set
 
+        /// <inheritdoc />
         public bool SetNewCountry(Country country)
         {
             if (country is null)

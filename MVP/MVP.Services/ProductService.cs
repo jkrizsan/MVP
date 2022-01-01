@@ -18,11 +18,13 @@ namespace MVP.Services
 
         #region Get
 
+        /// <inheritdoc />
         public Product GetProductById(int id)
         {
             return context.Products.Where(p => p.Id.Equals(id)).SingleOrDefault();
         }
 
+        /// <inheritdoc />
         public Product GetProductByName(string name)
         {
             return context.Products.Where(p => p.Name.Equals(name)).SingleOrDefault();
@@ -32,6 +34,7 @@ namespace MVP.Services
 
         #region Remove
 
+        /// <inheritdoc />
         public void RemoveProduct(Product product)
         {
             if (product is null)
@@ -43,6 +46,7 @@ namespace MVP.Services
             context.SaveChanges();
         }
 
+        /// <inheritdoc />
         public void RemoveProductById(int id)
         {
             var product = GetProductById(id);
@@ -53,6 +57,7 @@ namespace MVP.Services
 
         #region Set
 
+        /// <inheritdoc />
         public bool SetNewProduct(Product product)
         {
             if (product is null)

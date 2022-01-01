@@ -24,6 +24,7 @@ namespace MVP.Services
         private string GetMailData(string param)
             => Configuration.GetSection(EmailSettings).GetSection(param).Value;
 
+        /// <inheritdoc />
         public bool SendMail(string message, string target)
         {
             try

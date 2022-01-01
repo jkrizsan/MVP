@@ -1,12 +1,14 @@
 ﻿using MVP.Data.DTOs;
 using MVP.Data.Enums;
-using MVP.Services;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 
 namespace MVP.Services
 {
+    /// <summary>
+    /// Invoice Service
+    /// </summary>
     public class InvoiceService : IInvoiceService
     {
         private readonly ICountryService countryService;
@@ -17,18 +19,14 @@ namespace MVP.Services
             this.productService = productService;
         }
 
-        public string CreateInvoice(InvoiceResponseDto responseDto)
-        {
-            switch(responseDto.InvoiceFormat)
+        public string CreateInvoice(InvoiceResponseDto responseDto) =>
+            responseDto.InvoiceFormat switch
             {
-                case InvoiceFormat.JSON:
-                    return BuildJSONInvoice(responseDto);
-                case InvoiceFormat.HTML:
-                    return BuildHTMLInvoice(responseDto);
-                default:
-                    return "Error: Unexpected invoice format!";
-            }
-        }
+                InvoiceFormat.JSON => BuildJSONInvoice(responseDto),
+                InvoiceFormat.HTML => BuildHTMLInvoice(responseDto),
+                _ => "Error: Unexpected invoice format!",
+            };
+        
 
         #region Check And Parse Invoice Datas
 
@@ -45,21 +43,14 @@ namespace MVP.Services
             responseDto.EmailAddress = requestDto.EmailAddress;
         }
 
-        private void ParseInvoiceFormat(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
-        {
-            switch (requestDto.InvoiceFormat)
-            {
-                case "JSON":
-                    responseDto.InvoiceFormat = InvoiceFormat.JSON;
-                    break;
-                case "HTML":
-                    responseDto.InvoiceFormat = InvoiceFormat.HTML;
-                    break;
-                default:
-                    responseDto.ErrorMessage = $"Error: {requestDto.InvoiceFormat} invoice format does not supported!";
-                    break;
-            }
-        }
+        private object ParseInvoiceFormat(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+            => requestDto.InvoiceFormat switch
+                {
+                    "JSON" => responseDto.InvoiceFormat = InvoiceFormat.JSON,
+                    "HTML" => responseDto.InvoiceFormat = InvoiceFormat.HTML,
+                    _ => responseDto.ErrorMessage = $"Error: {requestDto.InvoiceFormat} invoice format does not supported!",
+                };
+        
 
         private void ParseProduct(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
         {
