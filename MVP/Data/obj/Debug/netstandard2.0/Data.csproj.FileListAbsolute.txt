@@ -1,7 +1,0 @@
-D:\AI\MVP\MVP\Data\bin\Debug\netstandard2.0\Data.deps.json
-D:\AI\MVP\MVP\Data\bin\Debug\netstandard2.0\Data.dll
-D:\AI\MVP\MVP\Data\obj\Debug\netstandard2.0\Data.AssemblyInfoInputs.cache
-D:\AI\MVP\MVP\Data\obj\Debug\netstandard2.0\Data.AssemblyInfo.cs
-D:\AI\MVP\MVP\Data\bin\Debug\netstandard2.0\Data.pdb
-D:\AI\MVP\MVP\Data\obj\Debug\netstandard2.0\Data.dll
-D:\AI\MVP\MVP\Data\obj\Debug\netstandard2.0\Data.pdb
