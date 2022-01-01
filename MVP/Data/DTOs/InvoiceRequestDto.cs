@@ -4,18 +4,45 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MVP.Data.DTOs
 {
+    /// <summary>
+    /// Dto class for Invoice Request
+    /// </summary>
     public class InvoiceRequestDto
     {
+        /// <summary>
+        /// List of Products
+        /// </summary>
         public List<ProductDto> Products { get; set; }
+
+        /// <summary>
+        /// Name of the Country
+        /// </summary>
         public string Country { get; set; }
+
+        /// <summary>
+        /// Invoice Format
+        /// </summary>
         public string InvoiceFormat { get; set; }
+
+        /// <summary>
+        /// Send Email or Nor
+        /// </summary>
         public string SendEmail { get; set; }
+
+        /// <summary>
+        /// Email Address
+        /// </summary>
         [EmailAddress]
         public string EmailAddress { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public InvoiceRequestDto()
         {
             Products = new List<ProductDto>();
         }
+
         public override string ToString()
         {
             var ret = string.Empty;

@@ -9,20 +9,40 @@ namespace MVP.API.Controllers
     [Route("[controller]")]
     public class InvoiceController : ControllerBase
     {
-        private readonly IInvoiceService invoiceService;
-        private readonly IEmailService emailService;
-        private readonly IOrderService orderService;
+        private readonly IInvoiceService _invoiceService;
+        private readonly IEmailService _emailService;
+        private readonly IOrderService _orderService;
 
         public InvoiceController(
             IInvoiceService invoiceService,
             IEmailService emailService,
             IOrderService orderService)
         {
-            this.invoiceService = invoiceService;
-            this.emailService = emailService;
-            this.orderService = orderService;
+            _invoiceService = invoiceService;
+            _emailService = emailService;
+            _orderService = orderService;
         }
 
+        /// <summary>
+        /// Create Invoice
+        /// </summary>
+        /// <param name="requestDto"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Invoice
+        ///     {
+        ///        "Country": "Finland",
+        ///        "InvoiceFormat" : "JSON",
+        ///        "SendEmail": "true",
+        ///        "EmailAddress": "xyz@abc.com",
+        ///        "Products":
+        ///       [
+        ///        {"Name": "apple", "Quantity":1}
+        ///       ]
+        ///     }
+        ///
         [HttpPost]
         public string Post([FromBody]InvoiceRequestDto requestDto)
         {
@@ -31,17 +51,17 @@ namespace MVP.API.Controllers
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
-            InvoiceResponseDto responseDto = invoiceService.CheckAndParseInvoice(requestDto);
+            InvoiceResponseDto responseDto = _invoiceService.CheckAndParseInvoice(requestDto);
             if(responseDto.ErrorMessage?.Length > 0)
             {
                 return responseDto.ErrorMessage;
             }
 
-            var response = invoiceService.CreateInvoice(responseDto);
+            var response = _invoiceService.CreateInvoice(responseDto);
 
             if (responseDto.SendEmail)
             {
-                emailService.SendMail(response, responseDto.EmailAddress);
+                _emailService.SendMail(response, responseDto.EmailAddress);
             }
 
             return response;

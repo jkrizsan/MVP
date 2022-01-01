@@ -22,6 +22,8 @@ namespace MVP.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen();
+
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
@@ -40,6 +42,9 @@ namespace MVP.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
             app.UseRouting();
