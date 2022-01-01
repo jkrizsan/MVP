@@ -1,4 +1,4 @@
-﻿namespace MVP.API
+﻿namespace MVP.Data.DTOs
 {
     public class ProductDto
     {

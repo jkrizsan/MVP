@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MVP.API.Helpers;
 using MVP.Data;
 using MVP.Services;
 
@@ -25,10 +24,9 @@ namespace MVP.API
             services.AddControllers();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICountryService, CountryService>();
-            services.AddScoped<IInvoiceDataHelper, InvoiceDataHelper>();
-            services.AddScoped<IInvoiceCreatorHelper, InvoiceCreatorHelper>();
-            services.AddScoped<IEmailHelper, EmailHelper>();
-            services.AddScoped<IOrderHelper, OrderHelper>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>

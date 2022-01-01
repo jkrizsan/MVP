@@ -1,6 +1,6 @@
-﻿namespace MVP.API.Helpers
+﻿namespace MVP.Services
 {
-    public interface IEmailHelper
+    public interface IEmailService
     {
         bool SendMail(string message, string target);
     }

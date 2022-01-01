@@ -1,6 +1,6 @@
-﻿namespace MVP.API.Helpers
+﻿namespace MVP.Services
 {
-    public class OrderHelper : IOrderHelper
+    public class OrderService : IOrderService
     {
         /// <summary>
         /// Implement Order logic here

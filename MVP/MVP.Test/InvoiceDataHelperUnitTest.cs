@@ -1,6 +1,5 @@
 ﻿using Moq;
-using MVP.API;
-using MVP.API.Helpers;
+using MVP.Data.DTOs;
 using MVP.Data.Models;
 using MVP.Services;
 using NUnit.Framework;
@@ -10,7 +9,7 @@ namespace MVP.Test
 {
     class InvoiceDataHelperUnitTest
     {
-        private InvoiceDataHelper invoiceDataHelper;
+        private InvoiceService invoiceService;
 
         [SetUp]
         public void Setup()
@@ -21,7 +20,7 @@ namespace MVP.Test
             var productService = new Mock<IProductService>();
             productService.Setup(x => x.GetProductByName("Apple")).Returns(new Product() { Name = "Apple", Price = 100 });
 
-            invoiceDataHelper = new InvoiceDataHelper(countryservice.Object, productService.Object);
+            invoiceService = new InvoiceService(countryservice.Object, productService.Object);
         }
 
         [Test]
@@ -38,7 +37,7 @@ namespace MVP.Test
                 SendEmail = "true",
                 EmailAddress = "something@something.com"
             };
-            var response = invoiceDataHelper.CheckAndParseInvoice(request);
+            var response = invoiceService.CheckAndParseInvoice(request);
 
             Assert.AreEqual(response.TotalPrices, 254);
             Assert.AreEqual(response.TotalTaxes, 54);
@@ -58,7 +57,7 @@ namespace MVP.Test
                 SendEmail = "true",
                 EmailAddress = "something@something.com"
             };
-            var response = invoiceDataHelper.CheckAndParseInvoice(request);
+            var response = invoiceService.CheckAndParseInvoice(request);
 
             Assert.IsTrue(response.ErrorMessage.Contains("Error: Poland country does not supported!"));
         }
@@ -77,7 +76,7 @@ namespace MVP.Test
                 SendEmail = "true",
                 EmailAddress = "something@something.com"
             };
-            var response = invoiceDataHelper.CheckAndParseInvoice(request);
+            var response = invoiceService.CheckAndParseInvoice(request);
 
             Assert.IsTrue(response.ErrorMessage.Contains("Error: Car product does not supported!"));
         }
@@ -92,7 +91,7 @@ namespace MVP.Test
                 SendEmail = "true",
                 EmailAddress = "something@something.com"
             };
-            var response = invoiceDataHelper.CheckAndParseInvoice(request);
+            var response = invoiceService.CheckAndParseInvoice(request);
 
             Assert.IsTrue(response.ErrorMessage.Contains("Error: Please give one or more products!"));
         }
@@ -110,7 +109,7 @@ namespace MVP.Test
                 InvoiceFormat = "JSON",
                 SendEmail = "true"
             };
-            var response = invoiceDataHelper.CheckAndParseInvoice(request);
+            var response = invoiceService.CheckAndParseInvoice(request);
             Assert.IsTrue(response.ErrorMessage.Contains("Error: Please give a valid Email Address!"));
         }
 
@@ -128,7 +127,7 @@ namespace MVP.Test
                 SendEmail = "true",
                 EmailAddress = "something@something.com"
             };
-            var response = invoiceDataHelper.CheckAndParseInvoice(request);
+            var response = invoiceService.CheckAndParseInvoice(request);
 
             Assert.IsTrue(response.ErrorMessage.Contains("Error: TEST invoice format does not supported!"));
         }

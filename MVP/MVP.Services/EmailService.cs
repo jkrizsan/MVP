@@ -2,9 +2,9 @@
 using System;
 using System.Net.Mail;
 
-namespace MVP.API.Helpers
+namespace MVP.Services
 {
-    public class EmailHelper : IEmailHelper
+    public class EmailService : IEmailService
     {
         private const string EmailSettings = "EmailSettings";
         private const string Server = "Server";
@@ -16,7 +16,7 @@ namespace MVP.API.Helpers
 
         public IConfiguration Configuration { get; }
 
-        public EmailHelper(IConfiguration Configuration = null)
+        public EmailService(IConfiguration Configuration = null)
         {
             this.Configuration = Configuration;
         }

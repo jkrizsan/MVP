@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using MVP.API;
 using MVP.API.Controllers;
-using MVP.API.Helpers;
 using MVP.Data;
+using MVP.Data.DTOs;
 using MVP.Data.Models;
 using MVP.Services;
 using Newtonsoft.Json;
@@ -30,7 +29,9 @@ namespace MVP.Test
             productService.SetNewProduct(new Product() { Name = "Apple", Price = 100 });
             productService.SetNewProduct(new Product() { Name = "Pizza", Price = 100 });
 
-            invoiceController = new InvoiceController(new InvoiceDataHelper(countryservice, productService), new InvoiceCreatorHelper(), new EmailHelper(), new OrderHelper());
+            invoiceController = new InvoiceController(new InvoiceService(new CountryService(context), new ProductService(context)),
+                new EmailService(),
+                new OrderService());
         }
 
         [Test]

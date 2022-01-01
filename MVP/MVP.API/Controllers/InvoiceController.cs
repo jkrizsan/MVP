@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using MVP.API.Helpers;
+using MVP.Data.DTOs;
+using MVP.Services;
 
 namespace MVP.API.Controllers
 {
@@ -8,17 +9,18 @@ namespace MVP.API.Controllers
     [Route("[controller]")]
     public class InvoiceController : ControllerBase
     {
-        private readonly IInvoiceDataHelper invoiceDataHelper;
-        private readonly IInvoiceCreatorHelper invoiceCreatorHelper;
-        private readonly IEmailHelper emailHelper;
-        private readonly IOrderHelper orderHelper;
+        private readonly IInvoiceService invoiceService;
+        private readonly IEmailService emailService;
+        private readonly IOrderService orderService;
 
-        public InvoiceController( IInvoiceDataHelper invoiceDataHelper, IInvoiceCreatorHelper invoiceCreatorHelper, IEmailHelper emailHelper, IOrderHelper orderHelper)
+        public InvoiceController(
+            IInvoiceService invoiceService,
+            IEmailService emailService,
+            IOrderService orderService)
         {
-            this.invoiceDataHelper = invoiceDataHelper;
-            this.invoiceCreatorHelper = invoiceCreatorHelper;
-            this.emailHelper = emailHelper;
-            this.orderHelper = orderHelper;
+            this.invoiceService = invoiceService;
+            this.emailService = emailService;
+            this.orderService = orderService;
         }
 
         [HttpPost]
@@ -29,17 +31,17 @@ namespace MVP.API.Controllers
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
-            InvoiceResponseDto responseDto = invoiceDataHelper.CheckAndParseInvoice(requestDto);
+            InvoiceResponseDto responseDto = invoiceService.CheckAndParseInvoice(requestDto);
             if(responseDto.ErrorMessage?.Length > 0)
             {
                 return responseDto.ErrorMessage;
             }
 
-            var response = invoiceCreatorHelper.CreateInvoice(responseDto);
+            var response = invoiceService.CreateInvoice(responseDto);
 
             if (responseDto.SendEmail)
             {
-                emailHelper.SendMail(response, responseDto.EmailAddress);
+                emailService.SendMail(response, responseDto.EmailAddress);
             }
 
             return response;

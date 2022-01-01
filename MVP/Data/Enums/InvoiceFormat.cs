@@ -1,4 +1,4 @@
-﻿namespace MVP.API
+﻿namespace MVP.Data.Enums
 {
     public enum InvoiceFormat
     {

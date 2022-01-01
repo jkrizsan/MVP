@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MVP.API
+namespace MVP.Data.DTOs
 {
     public class InvoiceRequestDto
     {
@@ -18,7 +18,7 @@ namespace MVP.API
         }
         public override string ToString()
         {
-            var ret = "";
+            var ret = string.Empty;
             if (Products != null)
             {
                 foreach (var item in Products)

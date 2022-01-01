@@ -1,8 +1,8 @@
-﻿using MVP.API.DTOs;
+﻿using MVP.Data.Enums;
 using MVP.Data.Models;
 using System.Collections.Generic;
 
-namespace MVP.API
+namespace MVP.Data.DTOs
 {
     public class InvoiceResponseDto
     {
