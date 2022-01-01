@@ -68,3 +68,10 @@ MVP/.vs/MVP/DesignTimeBuild/.dtbcache.v2
 /MVP/MVP.API/obj/Debug/netcoreapp3.0/MVP.API.GeneratedMSBuildEditorConfig.editorconfig
 /MVP/.vs/MVP/config/debuggerConfiguration-e4410bca-d295-43e7-a924-6532c235e794.json
 /.vs/MVP
+/MVP/Data/obj
+/MVP/MVP.API/obj
+/MVP/MVP.InitializeDataBase/obj
+/MVP/MVP.Services/bin/Debug/netstandard2.0
+/MVP/MVP.Services/obj/Debug/netstandard2.0
+/MVP/MVP.Services/obj
+/MVP/MVP.Test/obj
