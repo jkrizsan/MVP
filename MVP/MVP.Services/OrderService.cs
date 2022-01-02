@@ -1,14 +1,14 @@
 ﻿namespace MVP.Services
 {
+    /// <summary>
+    /// Order Service
+    /// </summary>
     public class OrderService : IOrderService
     {
-        /// <summary>
-        /// Implement Order logic here
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public string CreateOrder()
         {
-            return "";
+            return string.Empty;
         }
     }
 }

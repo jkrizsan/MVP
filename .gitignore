@@ -78,3 +78,7 @@ MVP/.vs/MVP/DesignTimeBuild/.dtbcache.v2
 /MVP/MVP.Test/obj
 MVP/.vs/MVP/v17/.suo
 MVP/.vs/MVP/v17/.su
+/MVP/Data/bin/Debug/netcoreapp3.1
+/MVP/MVP.API/bin/Debug/netcoreapp3.1
+/MVP/MVP.Test/bin/Debug/netcoreapp3.1
+/MVP/MVP.Services/bin/Debug/netcoreapp3.1

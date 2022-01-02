@@ -5,34 +5,34 @@ using System.Linq;
 
 namespace MVP.Services
 {
+    /// <summary>
+    /// Country Service
+    /// </summary>
     public class CountryService : ICountryService
     {
-        MVPContext context;
+        MVPContext _context;
 
-        #region Constructor
         public CountryService(MVPContext context)
         {
-            this.context = context;
+            _context = context;
         }
-        #endregion Constructor
 
-        #region Get
 
         /// <inheritdoc />
         public Country GetCountryById(int id)
         {
-            return context.Countries.Where(p => p.Id.Equals(id)).SingleOrDefault();
+            return _context.Countries
+                .Where(p => p.Id.Equals(id))
+                .SingleOrDefault();
         }
 
         /// <inheritdoc />
         public Country GetCountryByName(string name)
         {
-            return context.Countries.Where(p => p.Name.Equals(name)).SingleOrDefault();
+            return _context.Countries
+                .Where(p => p.Name.Equals(name))
+                .SingleOrDefault();
         }
-
-        #endregion Get
-
-        #region Remove
 
         /// <inheritdoc />
         public void RemoveCountry(Country country)
@@ -42,8 +42,8 @@ namespace MVP.Services
                 throw new ArgumentNullException(nameof(country));
             }
 
-            context.Countries.Remove(country);
-            context.SaveChanges();
+            _context.Countries.Remove(country);
+            _context.SaveChanges();
         }
 
         /// <inheritdoc />
@@ -53,10 +53,6 @@ namespace MVP.Services
             RemoveCountry(country);
         }
 
-        #endregion Remove
-
-        #region Set
-
         /// <inheritdoc />
         public bool SetNewCountry(Country country)
         {
@@ -65,18 +61,14 @@ namespace MVP.Services
                 throw new ArgumentNullException(nameof(country));
             }
 
-            var count = GetCountryByName(country.Name);
-
-            if (count != null)
+            if (GetCountryByName(country.Name) != null)
             {
                 return false;
             }
 
-            context.Countries.Add(country);
-            context.SaveChanges();
+            _context.Countries.Add(country);
+            _context.SaveChanges();
             return true;
         }
-
-        #endregion Set
     }
 }

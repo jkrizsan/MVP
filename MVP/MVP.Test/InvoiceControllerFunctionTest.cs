@@ -21,6 +21,7 @@ namespace MVP.Test
             var options = new DbContextOptionsBuilder<MVPContext>()
                       .UseInMemoryDatabase(Guid.NewGuid().ToString())
                       .Options;
+
             var context = new MVPContext(options);
             var countryservice = new CountryService(context);
             var productService = new ProductService(context);

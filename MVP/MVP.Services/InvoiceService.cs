@@ -11,12 +11,13 @@ namespace MVP.Services
     /// </summary>
     public class InvoiceService : IInvoiceService
     {
-        private readonly ICountryService countryService;
-        private readonly IProductService productService;
+        private readonly ICountryService _countryService;
+        private readonly IProductService _productService;
+
         public InvoiceService(ICountryService countryService, IProductService productService)
         {
-            this.countryService = countryService;
-            this.productService = productService;
+            _countryService = countryService;
+            _productService = productService;
         }
 
         public string CreateInvoice(InvoiceResponseDto responseDto) =>
@@ -26,76 +27,6 @@ namespace MVP.Services
                 InvoiceFormat.HTML => BuildHTMLInvoice(responseDto),
                 _ => "Error: Unexpected invoice format!",
             };
-        
-
-        #region Check And Parse Invoice Datas
-
-        private void ParseSendEmailAndEmailAddress(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
-        {
-            responseDto.SendEmail = requestDto.SendEmail.ToLowerInvariant()
-                .Equals("true") ? true : false;
-
-            if (responseDto.SendEmail && string.IsNullOrEmpty(requestDto.EmailAddress))
-            {
-                responseDto.ErrorMessage = "Error: Please give a valid Email Address!";
-                return;
-            }
-            responseDto.EmailAddress = requestDto.EmailAddress;
-        }
-
-        private object ParseInvoiceFormat(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
-            => requestDto.InvoiceFormat switch
-                {
-                    "JSON" => responseDto.InvoiceFormat = InvoiceFormat.JSON,
-                    "HTML" => responseDto.InvoiceFormat = InvoiceFormat.HTML,
-                    _ => responseDto.ErrorMessage = $"Error: {requestDto.InvoiceFormat} invoice format does not supported!",
-                };
-        
-
-        private void ParseProduct(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
-        {
-            if (requestDto.Products is null || requestDto.Products.Count.Equals(0))
-            {
-                responseDto.ErrorMessage = "Error: Please give one or more products!";
-                return;
-            }
-            foreach (var p in requestDto.Products)
-            {
-                var prod = productService.GetProductByName(p.Name);
-                if (prod is null)
-                {
-                    responseDto.ErrorMessage = $"Error: {p.Name} product does not supported!";
-                    return;
-                }
-                for (int i = 0; i < p.Quantity; i++)
-                {
-                    var pp = new ProductPriceDto();
-                    pp.Name = prod.Name;
-                    pp.Tax = (prod.Price * responseDto.Country.Tax) / 100.0;
-                    pp.Price = prod.Price + pp.Tax;
-                    responseDto.ProductPricess.Add(pp);
-                }
-            }
-        }
-
-        private void ParseCountry(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
-        {
-            var country = countryService.GetCountryByName(requestDto.Country);
-            if (country is null)
-            {
-                responseDto.ErrorMessage = $"Error: {requestDto.Country} country does not supported!";
-                return;
-            }
-            responseDto.Country = country;
-        }
-
-        private void SetPricesAndTaxes(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
-        {
-            responseDto.TotalTaxes = Math.Round(responseDto.ProductPricess.Select(x => x.Tax).ToList().Sum(), 2);
-            responseDto.TotalPrices = Math.Round(responseDto.ProductPricess.Select(x => x.Price).ToList().Sum(), 2);
-        }
-
-        #endregion Check And Parse Invoice Datas
 
         /// <summary>
         /// Convert request data to response data
@@ -115,6 +46,75 @@ namespace MVP.Services
             return responseDto;
         }
 
+        private void ParseSendEmailAndEmailAddress(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+        {
+            responseDto.SendEmail = requestDto.SendEmail
+                .ToLowerInvariant()
+                .Equals("true")
+                    ? true
+                    : false;
+
+            if (responseDto.SendEmail && string.IsNullOrEmpty(requestDto.EmailAddress))
+            {
+                responseDto.ErrorMessage = "Error: Please give a valid Email Address!";
+                return;
+            }
+
+            responseDto.EmailAddress = requestDto.EmailAddress;
+        }
+
+        private object ParseInvoiceFormat(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto) =>
+            requestDto.InvoiceFormat switch
+            {
+                "JSON" => responseDto.InvoiceFormat = InvoiceFormat.JSON,
+                "HTML" => responseDto.InvoiceFormat = InvoiceFormat.HTML,
+                _ => responseDto.ErrorMessage = $"Error: {requestDto.InvoiceFormat} invoice format does not supported!",
+            };
+
+        private void ParseProduct(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+        {
+            if (requestDto.Products is null || requestDto.Products.Count.Equals(0))
+            {
+                responseDto.ErrorMessage = "Error: Please give one or more products!";
+                return;
+            }
+
+            foreach (var prod in requestDto.Products)
+            {
+                var prodFromDb = _productService.GetProductByName(prod.Name);
+                if (prodFromDb is null)
+                {
+                    responseDto.ErrorMessage = $"Error: {prod.Name} product does not supported!";
+                    return;
+                }
+                for (int i = 0; i < prod.Quantity; i++)
+                {
+                    var pp = new ProductPriceDto();
+                    pp.Name = prodFromDb.Name;
+                    pp.Tax = (prodFromDb.Price * responseDto.Country.Tax) / 100.0;
+                    pp.Price = prodFromDb.Price + pp.Tax;
+                    responseDto.ProductPricess.Add(pp);
+                }
+            }
+        }
+
+        private void ParseCountry(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+        {
+            var country = _countryService.GetCountryByName(requestDto.Country);
+            if (country is null)
+            {
+                responseDto.ErrorMessage = $"Error: {requestDto.Country} country does not supported!";
+                return;
+            }
+            responseDto.Country = country;
+        }
+
+        private void SetPricesAndTaxes(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+        {
+            responseDto.TotalTaxes = Math.Round(responseDto.ProductPricess.Select(x => x.Tax).ToList().Sum(), 2);
+            responseDto.TotalPrices = Math.Round(responseDto.ProductPricess.Select(x => x.Price).ToList().Sum(), 2);
+        }
+
         private string BuildHTMLInvoice(InvoiceResponseDto responseDto)
         {
             string result = $@"<!DOCTYPE html>{Environment.NewLine}";
@@ -130,6 +130,7 @@ namespace MVP.Services
             result += $@"</tr>{Environment.NewLine}";
             result += $@"</thead>{Environment.NewLine}";
             result += $@"<tbody>{Environment.NewLine}";
+
             foreach (var item in responseDto.ProductPricess)
             {
                 result += $@"<tr>{Environment.NewLine}";
@@ -138,6 +139,7 @@ namespace MVP.Services
                 result += $@"<td>{item.Tax}</td>{Environment.NewLine}";
                 result += $@"</tr>{Environment.NewLine}";
             }
+
             result += $@"</tbody>{Environment.NewLine}";
             result += $@"</table>{Environment.NewLine}";
 

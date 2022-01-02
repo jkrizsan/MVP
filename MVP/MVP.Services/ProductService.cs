@@ -5,34 +5,29 @@ using MVP.Data.Models;
 
 namespace MVP.Services
 {
+    /// <summary>
+    /// Product Service
+    /// </summary>
     public class ProductService : IProductService
     {
-        MVPContext context;
+        private MVPContext _context;
 
-        #region Constructor
         public ProductService(MVPContext context)
         {
-            this.context = context;
+            _context = context;
         }
-        #endregion Constructor
-
-        #region Get
 
         /// <inheritdoc />
         public Product GetProductById(int id)
         {
-            return context.Products.Where(p => p.Id.Equals(id)).SingleOrDefault();
+            return _context.Products.Where(p => p.Id.Equals(id)).SingleOrDefault();
         }
 
         /// <inheritdoc />
         public Product GetProductByName(string name)
         {
-            return context.Products.Where(p => p.Name.Equals(name)).SingleOrDefault();
+            return _context.Products.Where(p => p.Name.Equals(name)).SingleOrDefault();
         }
-
-        #endregion Get
-
-        #region Remove
 
         /// <inheritdoc />
         public void RemoveProduct(Product product)
@@ -42,8 +37,8 @@ namespace MVP.Services
                 throw new ArgumentNullException(nameof(product));
             } 
 
-            context.Products.Remove(product);
-            context.SaveChanges();
+            _context.Products.Remove(product);
+            _context.SaveChanges();
         }
 
         /// <inheritdoc />
@@ -52,10 +47,6 @@ namespace MVP.Services
             var product = GetProductById(id);
             RemoveProduct(product);
         }
-
-        #endregion Remove
-
-        #region Set
 
         /// <inheritdoc />
         public bool SetNewProduct(Product product)
@@ -72,11 +63,10 @@ namespace MVP.Services
                 return false;
             }
 
-            context.Products.Add(product);
-            context.SaveChanges();
+            _context.Products.Add(product);
+            _context.SaveChanges();
             return true;
         }
 
-        #endregion Set
     }
 }

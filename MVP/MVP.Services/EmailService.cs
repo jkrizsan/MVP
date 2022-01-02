@@ -6,23 +6,20 @@ namespace MVP.Services
 {
     public class EmailService : IEmailService
     {
-        private const string EmailSettings = "EmailSettings";
-        private const string Server = "Server";
-        private const string From = "From";
-        private const string Subject = "Subject";
-        private const string Port = "Port";
-        private const string User = "User";
-        private const string Password = "Password";
+        private const string EmailSettings = nameof(EmailSettings);
+        private const string Server = nameof(Server);
+        private const string From = nameof(From);
+        private const string Subject = nameof(Subject);
+        private const string Port = nameof(Port);
+        private const string User = nameof(User);
+        private const string Password = nameof(Password);
 
         public IConfiguration Configuration { get; }
 
-        public EmailService(IConfiguration Configuration = null)
+        public EmailService(IConfiguration configuration = null)
         {
-            this.Configuration = Configuration;
+            Configuration = configuration;
         }
-
-        private string GetMailData(string param)
-            => Configuration.GetSection(EmailSettings).GetSection(param).Value;
 
         /// <inheritdoc />
         public bool SendMail(string message, string target)
@@ -47,5 +44,10 @@ namespace MVP.Services
             }
             return true;
         }
+
+        private string GetMailData(string param) =>
+            Configuration
+            .GetSection(EmailSettings)
+            .GetSection(param).Value;
     }
 }
