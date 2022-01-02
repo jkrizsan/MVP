@@ -173,7 +173,7 @@ namespace MVP.Services
 
         private string BuildJSONInvoice(InvoiceResponseDto responseDto)
         {
-            string result = "";
+            string result = string.Empty;
 
             try
             {

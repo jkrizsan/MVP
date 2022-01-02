@@ -25,7 +25,7 @@ namespace MVP.Data.DTOs
         public string InvoiceFormat { get; set; }
 
         /// <summary>
-        /// Send Email or Nor
+        /// Send Email or Not after the invoice is created
         /// </summary>
         public string SendEmail { get; set; }
 

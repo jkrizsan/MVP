@@ -17,7 +17,6 @@ namespace MVP.Services
             _context = context;
         }
 
-
         /// <inheritdoc />
         public Country GetCountryById(int id)
         {
