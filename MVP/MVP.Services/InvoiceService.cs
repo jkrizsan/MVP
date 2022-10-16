@@ -1,8 +1,10 @@
-﻿using MVP.Data.DTOs;
-using MVP.Data.Enums;
+﻿using MVP.Data.Enums;
+using MVP.Data.Models;
+using MVP.Services.Repositories;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace MVP.Services
 {
@@ -11,167 +13,177 @@ namespace MVP.Services
     /// </summary>
     public class InvoiceService : IInvoiceService
     {
-        private readonly ICountryService _countryService;
-        private readonly IProductService _productService;
+        private readonly ICountryRepository _countryRepository;
 
-        public InvoiceService(ICountryService countryService, IProductService productService)
+        private readonly IProductRepository _productRepository;
+
+        public InvoiceService(ICountryRepository countryRepository, IProductRepository productRepository)
         {
-            _countryService = countryService;
-            _productService = productService;
+            _countryRepository = countryRepository;
+            _productRepository = productRepository;
         }
 
-        public string CreateInvoice(InvoiceResponseDto responseDto) =>
-            responseDto.InvoiceFormat switch
+        public string CreateInvoice(InvoiceResponse response) =>
+            response.InvoiceFormat switch
             {
-                InvoiceFormat.JSON => BuildJSONInvoice(responseDto),
-                InvoiceFormat.HTML => BuildHTMLInvoice(responseDto),
+                InvoiceFormat.JSON => BuildJSONInvoice(response),
+                InvoiceFormat.HTML => BuildHTMLInvoice(response),
                 _ => "Error: Unexpected invoice format!",
             };
 
         /// <summary>
         /// Convert request data to response data
         /// </summary>
-        /// <param name="requestDto"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        public InvoiceResponseDto CheckAndParseInvoice(InvoiceRequestDto requestDto)
+        public InvoiceResponse CheckAndParseInvoice(InvoiceRequest request)
         {
-            var responseDto = new InvoiceResponseDto();
+            var response = new InvoiceResponse();
 
-            ParseSendEmailAndEmailAddress(requestDto, responseDto);
-            ParseInvoiceFormat(requestDto, responseDto);
-            ParseCountry(requestDto, responseDto);
-            ParseProduct(requestDto, responseDto);
-            SetPricesAndTaxes(requestDto, responseDto);
+            ParseSendEmailAndEmailAddress(request, response);
+            ParseInvoiceFormat(request, response);
+            ParseCountry(request, response);
+            ParseProduct(request, response);
+            SetPricesAndTaxes(request, response);
 
-            return responseDto;
+            return response;
         }
 
-        private void ParseSendEmailAndEmailAddress(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+        private void ParseSendEmailAndEmailAddress(InvoiceRequest request, InvoiceResponse response)
         {
-            responseDto.SendEmail = requestDto.SendEmail
-                .ToLowerInvariant()
-                .Equals("true")
-                    ? true
-                    : false;
+            response.SendEmail = request.SendEmail;
 
-            if (responseDto.SendEmail && string.IsNullOrEmpty(requestDto.EmailAddress))
+            if (response.SendEmail && string.IsNullOrEmpty(request.EmailAddress))
             {
-                responseDto.ErrorMessage = "Error: Please give a valid Email Address!";
+                response.ErrorMessage = "Error: Please give a valid Email Address!";
                 return;
             }
 
-            responseDto.EmailAddress = requestDto.EmailAddress;
+            response.EmailAddress = request.EmailAddress;
         }
 
-        private object ParseInvoiceFormat(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto) =>
-            requestDto.InvoiceFormat switch
-            {
-                "JSON" => responseDto.InvoiceFormat = InvoiceFormat.JSON,
-                "HTML" => responseDto.InvoiceFormat = InvoiceFormat.HTML,
-                _ => responseDto.ErrorMessage = $"Error: {requestDto.InvoiceFormat} invoice format does not supported!",
-            };
-
-        private void ParseProduct(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+        private InvoiceResponse ParseInvoiceFormat(InvoiceRequest request, InvoiceResponse response)
         {
-            if (requestDto.Products is null || requestDto.Products.Count.Equals(0))
+            if(request.InvoiceFormat == InvoiceFormat.Unknown)
             {
-                responseDto.ErrorMessage = "Error: Please give one or more products!";
+                response.ErrorMessage = $"Error: '{request.InvoiceFormat}' invoice format does not supported!";
+            }
+            response.InvoiceFormat = request.InvoiceFormat;
+
+            return response;
+        }
+            //request.InvoiceFormat switch
+            //{
+            //    "JSON" => response.InvoiceFormat = InvoiceFormat.JSON,
+            //    "HTML" => response.InvoiceFormat = InvoiceFormat.HTML,
+            //    _ => response.ErrorMessage = $"Error: '{request.InvoiceFormat}' invoice format does not supported!",
+            //};
+
+        private void ParseProduct(InvoiceRequest request, InvoiceResponse response)
+        {
+            if (request.Products is null || request.Products.Count.Equals(0))
+            {
+                response.ErrorMessage = "Error: Please give one or more products!";
                 return;
             }
 
-            foreach (var prod in requestDto.Products)
+            foreach (var prod in request.Products)
             {
-                var prodFromDb = _productService.GetProductByName(prod.Name);
+                var prodFromDb = _productRepository.GetByName(prod.Name);
                 if (prodFromDb is null)
                 {
-                    responseDto.ErrorMessage = $"Error: {prod.Name} product does not supported!";
+                    response.ErrorMessage = $"Error: {prod.Name} product does not supported!";
                     return;
                 }
                 for (int i = 0; i < prod.Quantity; i++)
                 {
-                    var pp = new ProductPriceDto();
+                    var pp = new ProductPrice();
                     pp.Name = prodFromDb.Name;
-                    pp.Tax = (prodFromDb.Price * responseDto.Country.Tax) / 100.0;
+                    pp.Tax = (prodFromDb.Price * response.Country.Tax) / 100.0;
                     pp.Price = prodFromDb.Price + pp.Tax;
-                    responseDto.ProductPricess.Add(pp);
+                    response.ProductPricess.Add(pp);
                 }
             }
         }
 
-        private void ParseCountry(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+        private void ParseCountry(InvoiceRequest request, InvoiceResponse response)
         {
-            var country = _countryService.GetCountryByName(requestDto.Country);
+            var country = _countryRepository.GetByName(request.Country);
             if (country is null)
             {
-                responseDto.ErrorMessage = $"Error: {requestDto.Country} country does not supported!";
+                response.ErrorMessage = $"Error: {request.Country} country does not supported!";
                 return;
             }
-            responseDto.Country = country;
+
+            response.Country = country;
         }
 
-        private void SetPricesAndTaxes(InvoiceRequestDto requestDto, InvoiceResponseDto responseDto)
+        private void SetPricesAndTaxes(InvoiceRequest request, InvoiceResponse response)
         {
-            responseDto.TotalTaxes = Math.Round(responseDto.ProductPricess.Select(x => x.Tax).ToList().Sum(), 2);
-            responseDto.TotalPrices = Math.Round(responseDto.ProductPricess.Select(x => x.Price).ToList().Sum(), 2);
+            response.TotalTaxes = Math.Round(response.ProductPricess.Select(x => x.Tax).ToList().Sum(), 2);
+
+            response.TotalPrices = Math.Round(response.ProductPricess.Select(x => x.Price).ToList().Sum(), 2);
         }
 
-        private string BuildHTMLInvoice(InvoiceResponseDto responseDto)
+        private string BuildHTMLInvoice(InvoiceResponse responseDto)
         {
-            string result = $@"<!DOCTYPE html>{Environment.NewLine}";
-            result += $@"<html>{Environment.NewLine}";
-            result += $@"<body>{Environment.NewLine}";
+            StringBuilder invoice = new StringBuilder(100);
 
-            result += $@"<table border=1>{Environment.NewLine}";
-            result += $@"<thead>{Environment.NewLine}";
-            result += $@"<tr>{Environment.NewLine}";
-            result += $@"<th>Product Name</th>{Environment.NewLine}";
-            result += $@"<th>Product Price</th>{Environment.NewLine}";
-            result += $@"<th>Product Tax</th>{Environment.NewLine}";
-            result += $@"</tr>{Environment.NewLine}";
-            result += $@"</thead>{Environment.NewLine}";
-            result += $@"<tbody>{Environment.NewLine}";
+            invoice.Append($@"<!DOCTYPE html>{Environment.NewLine}");
+            invoice.Append($@"<html>{Environment.NewLine}");
+            invoice.Append($@"<body>{Environment.NewLine}");
+
+            invoice.Append($@"<table border=1>{Environment.NewLine}");
+            invoice.Append($@"<thead>{Environment.NewLine}");
+            invoice.Append($@"<tr>{Environment.NewLine}");
+            invoice.Append($@"<th>Product Name</th>{Environment.NewLine}");
+            invoice.Append($@"<th>Product Price</th>{Environment.NewLine}");
+            invoice.Append($@"<th>Product Tax</th>{Environment.NewLine}");
+            invoice.Append($@"</tr>{Environment.NewLine}");
+            invoice.Append($@"</thead>{Environment.NewLine}");
+            invoice.Append($@"<tbody>{Environment.NewLine}");
 
             foreach (var item in responseDto.ProductPricess)
             {
-                result += $@"<tr>{Environment.NewLine}";
-                result += $@"<td>{item.Name}</td>{Environment.NewLine}";
-                result += $@"<td>{item.Price}</td>{Environment.NewLine}";
-                result += $@"<td>{item.Tax}</td>{Environment.NewLine}";
-                result += $@"</tr>{Environment.NewLine}";
+                invoice.Append($@"<tr>{Environment.NewLine}");
+                invoice.Append($@"<td>{item.Name}</td>{Environment.NewLine}");
+                invoice.Append($@"<td>{item.Price}</td>{Environment.NewLine}");
+                invoice.Append($@"<td>{item.Tax}</td>{Environment.NewLine}");
+                invoice.Append($@"</tr>{Environment.NewLine}");
             }
 
-            result += $@"</tbody>{Environment.NewLine}";
-            result += $@"</table>{Environment.NewLine}";
+            invoice.Append($@"</tbody>{Environment.NewLine}");
+            invoice.Append($@"</table>{Environment.NewLine}");
 
-            result += $@"<table border=1>{Environment.NewLine}";
-            result += $@"<thead>{Environment.NewLine}";
-            result += $@"<tr>{Environment.NewLine}";       
-            result += $@"<th>{nameof(responseDto.Country)}</th>{Environment.NewLine}";
-            result += $@"<th>{nameof(responseDto.Country.Tax)}</th>{Environment.NewLine}";
-            result += $@"<th>{nameof(responseDto.EmailAddress)}</th>{Environment.NewLine}";
-            result += $@"<th>{nameof(responseDto.TotalPrices)}</th>{Environment.NewLine}";
-            result += $@"<th>{nameof(responseDto.TotalTaxes)}</th>{Environment.NewLine}";
-            result += $@"</tr>{Environment.NewLine}";
-            result += $@"</thead>{Environment.NewLine}";
-            result += $@"</tbody>{Environment.NewLine}";
-            result += $@"<tr>{Environment.NewLine}";
-            result += $@"<td>{responseDto.Country.Name}</td>{Environment.NewLine}";
-            result += $@"<td>{responseDto.Country.Tax}</td>{Environment.NewLine}";
-            result += $@"<td>{responseDto.EmailAddress}</td>{Environment.NewLine}";
-            result += $@"<td>{responseDto.TotalPrices}</td>{Environment.NewLine}";
-            result += $@"<td>{responseDto.TotalTaxes}</td>{Environment.NewLine}";
-            result += $@"</tr>{Environment.NewLine}";
-            result += $@"</tbody>{Environment.NewLine}";
-            result += $@"</table>{Environment.NewLine}";
+            invoice.Append($@"<table border=1>{Environment.NewLine}");
+            invoice.Append($@"<thead>{Environment.NewLine}");
+            invoice.Append($@"<tr>{Environment.NewLine}");
+            invoice.Append($@"<th>{nameof(responseDto.Country)}</th>{Environment.NewLine}");
+            invoice.Append($@"<th>{nameof(responseDto.Country.Tax)}</th>{Environment.NewLine}");
+            invoice.Append($@"<th>{nameof(responseDto.EmailAddress)}</th>{Environment.NewLine}");
+            invoice.Append($@"<th>{nameof(responseDto.TotalPrices)}</th>{Environment.NewLine}");
+            invoice.Append($@"<th>{nameof(responseDto.TotalTaxes)}</th>{Environment.NewLine}");
+            invoice.Append($@"</tr>{Environment.NewLine}");
+            invoice.Append($@"</thead>{Environment.NewLine}");
+            invoice.Append($@"</tbody>{Environment.NewLine}");
+            invoice.Append($@"<tr>{Environment.NewLine}");
+            invoice.Append($@"<td>{responseDto.Country.Name}</td>{Environment.NewLine}");
+            invoice.Append($@"<td>{responseDto.Country.Tax}</td>{Environment.NewLine}");
+            invoice.Append($@"<td>{responseDto.EmailAddress}</td>{Environment.NewLine}");
+            invoice.Append($@"<td>{responseDto.TotalPrices}</td>{Environment.NewLine}");
+            invoice.Append($@"<td>{responseDto.TotalTaxes}</td>{Environment.NewLine}");
+            invoice.Append($@"</tr>{Environment.NewLine}");
+            invoice.Append($@"</tbody>{Environment.NewLine}");
+            invoice.Append($@"</table>{Environment.NewLine}");
 
-            result += $@"</tbody>{Environment.NewLine}";
-            result += $@"</body>{Environment.NewLine}";
-            result += $@"</html>{Environment.NewLine}";
+            invoice.Append($@"</tbody>{Environment.NewLine}");
+            invoice.Append($@"</body>{Environment.NewLine}");
+            invoice.Append($@"</html>{Environment.NewLine}");
             
-            return result;
+            return invoice.ToString();
         }
 
-        private string BuildJSONInvoice(InvoiceResponseDto responseDto)
+        private string BuildJSONInvoice(InvoiceResponse responseDto)
         {
             string result = string.Empty;
 

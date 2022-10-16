@@ -3,22 +3,22 @@ using MVP.Data.Models;
 using System;
 using System.Linq;
 
-namespace MVP.Services
+namespace MVP.Services.Repositories
 {
     /// <summary>
     /// Country Service
     /// </summary>
-    public class CountryService : ICountryService
+    public class CountryRepository : ICountryRepository
     {
         MVPContext _context;
 
-        public CountryService(MVPContext context)
+        public CountryRepository(MVPContext context)
         {
             _context = context;
         }
 
         /// <inheritdoc />
-        public Country GetCountryById(int id)
+        public Country GetById(int id)
         {
             return _context.Countries
                 .Where(p => p.Id.Equals(id))
@@ -26,7 +26,7 @@ namespace MVP.Services
         }
 
         /// <inheritdoc />
-        public Country GetCountryByName(string name)
+        public Country GetByName(string name)
         {
             return _context.Countries
                 .Where(p => p.Name.Equals(name))
@@ -34,7 +34,7 @@ namespace MVP.Services
         }
 
         /// <inheritdoc />
-        public void RemoveCountry(Country country)
+        public void Delete(Country country)
         {
             if (country is null)
             {
@@ -46,21 +46,21 @@ namespace MVP.Services
         }
 
         /// <inheritdoc />
-        public void RemoveCountryById(int id)
+        public void DeleteById(int id)
         {
-            var country = GetCountryById(id);
-            RemoveCountry(country);
+            var country = GetById(id);
+            Delete(country);
         }
 
         /// <inheritdoc />
-        public bool SetNewCountry(Country country)
+        public bool Add(Country country)
         {
             if (country is null)
             {
                 throw new ArgumentNullException(nameof(country));
             }
 
-            if (GetCountryByName(country.Name) != null)
+            if (GetByName(country.Name) != null)
             {
                 return false;
             }

@@ -1,9 +1,9 @@
-﻿namespace MVP.Data.DTOs
+﻿namespace MVP.Data.Models
 {
     /// <summary>
-    /// Dto class for Product
+    /// Dto class for the InvocieProduct
     /// </summary>
-    public class ProductDto
+    public class InvoiceProduct
     {
         /// <summary>
         /// Product Name

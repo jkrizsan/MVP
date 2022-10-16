@@ -2,17 +2,17 @@
 using MVP.Data.Models;
 using System.Collections.Generic;
 
-namespace MVP.Data.DTOs
+namespace MVP.Data.Models
 {
     /// <summary>
     /// Dto class for Invoice Response
     /// </summary>
-    public class InvoiceResponseDto
+    public class InvoiceResponse
     {
         /// <summary>
         /// List of Product Pricess
         /// </summary>
-        public List<ProductPriceDto> ProductPricess { get; set; }
+        public List<ProductPrice> ProductPricess { get; set; }
 
         /// <summary>
         /// Country
@@ -52,10 +52,10 @@ namespace MVP.Data.DTOs
         /// <summary>
         /// Constructor
         /// </summary>
-        public InvoiceResponseDto()
+        public InvoiceResponse()
         {
             Country = new Country();
-            ProductPricess = new List<ProductPriceDto>();
+            ProductPricess = new List<ProductPrice>();
         }
     }
 }

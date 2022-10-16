@@ -1,9 +1,9 @@
-﻿namespace MVP.Services
+﻿namespace MVP.Services.Repositories
 {
     /// <summary>
     /// Order Service
     /// </summary>
-    public class OrderService : IOrderService
+    public class OrderRepository : IOrderRepository
     {
         /// <inheritdoc />
         public string CreateOrder()

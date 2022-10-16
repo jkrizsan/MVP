@@ -1,9 +1,9 @@
-﻿namespace MVP.Services
+﻿namespace MVP.Services.Repositories
 {
     /// <summary>
     /// Interface for Order Service
     /// </summary>
-    public interface IOrderService
+    public interface IOrderRepository
     {
         /// <summary>
         /// Create Order

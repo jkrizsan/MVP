@@ -1,9 +1,9 @@
-﻿namespace MVP.Data.DTOs
+﻿namespace MVP.Data.Models
 {
     /// <summary>
     /// Dto class for Product Price
     /// </summary>
-    public class ProductPriceDto
+    public class ProductPrice
     {
         /// <summary>
         /// Product Name

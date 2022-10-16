@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using MVP.Data;
 using MVP.Services;
+using MVP.Services.Repositories;
 
 namespace MVP.API
 {
@@ -21,18 +23,24 @@ namespace MVP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddSwaggerGen();
+            //services.AddSwaggerGen();
 
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MVP", Version = "v1" });
+            });
+
+            services.AddControllers().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,15 +51,19 @@ namespace MVP.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MVP API V1");
             });
         }
     }

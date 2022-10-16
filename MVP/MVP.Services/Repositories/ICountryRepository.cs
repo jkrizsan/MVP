@@ -1,43 +1,43 @@
 ﻿using MVP.Data.Models;
 
-namespace MVP.Services
+namespace MVP.Services.Repositories
 {
     /// <summary>
-    /// Interface of Country Service
+    /// Interface of Country Repository
     /// </summary>
-    public interface ICountryService
+    public interface ICountryRepository
     {
         /// <summary>
         /// Add New Country
         /// </summary>
         /// <param name="country"></param>
         /// <returns></returns>
-        bool SetNewCountry(Country country);
+        bool Add(Country country);
 
         /// <summary>
         /// Get a Country by Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Country</returns>
-        Country GetCountryById(int id);
+        Country GetById(int id);
 
         /// <summary>
         /// Get a Country by Name
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Country</returns>
-        Country GetCountryByName(string name);
+        Country GetByName(string name);
 
         /// <summary>
-        /// Remove Coiuntry
+        /// Delete Country
         /// </summary>
         /// <param name="country"></param>
-        void RemoveCountry(Country country);
+        void Delete(Country country);
 
         /// <summary>
         /// Remove Country By Name
         /// </summary>
         /// <param name="id"></param>
-        void RemoveCountryById(int id);
+        void DeleteById(int id);
     }
 }

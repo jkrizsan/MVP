@@ -82,3 +82,8 @@ MVP/.vs/MVP/v17/.su
 /MVP/MVP.API/bin/Debug/netcoreapp3.1
 /MVP/MVP.Test/bin/Debug/netcoreapp3.1
 /MVP/MVP.Services/bin/Debug/netcoreapp3.1
+/MVP/.vs/ProjectEvaluation
+/MVP/Data/bin/Debug/net5
+/MVP/MVP.API/bin/Debug/net5
+/MVP/MVP.Services/bin/Debug/net5
+/MVP/MVP.Test/bin/Debug/net5

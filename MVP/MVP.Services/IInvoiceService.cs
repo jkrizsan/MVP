@@ -1,4 +1,4 @@
-﻿using MVP.Data.DTOs;
+﻿using MVP.Data.Models;
 
 namespace MVP.Services
 {
@@ -12,13 +12,13 @@ namespace MVP.Services
         /// </summary>
         /// <param name="responseDto"></param>
         /// <returns></returns>
-        string CreateInvoice(InvoiceResponseDto responseDto);
+        string CreateInvoice(InvoiceResponse responseDto);
 
         /// <summary>
         /// Validate and parse invoice request data
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-        InvoiceResponseDto CheckAndParseInvoice(InvoiceRequestDto requestDto);
+        InvoiceResponse CheckAndParseInvoice(InvoiceRequest requestDto);
     }
 }
