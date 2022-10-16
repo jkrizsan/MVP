@@ -25,8 +25,6 @@ namespace MVP.Data.Models
         /// <summary>
         /// Invoice Format
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        [JsonPropertyName("INVOICEFORMAT")]
         public InvoiceFormat InvoiceFormat { get; set; }
 
         /// <summary>
@@ -47,24 +45,5 @@ namespace MVP.Data.Models
         {
             Products = new List<InvoiceProduct>();
         }
-
-        //public override string ToString()
-        //{
-        //    var ret = string.Empty;
-        //    if (Products != null)
-        //    {
-        //        foreach (var item in Products)
-        //        {
-        //            ret = $"{ret}{nameof(item.Name)}:{item.Name} {nameof(item.Quantity)}:{item.Quantity}{Environment.NewLine}";
-        //        }
-        //    }
-
-        //    ret = $"{ret}{nameof(Country)}:{Country}{Environment.NewLine}";
-        //    ret = $"{ret}{nameof(InvoiceFormat)}:{InvoiceFormat}{Environment.NewLine}";
-        //    ret = $"{ret}{nameof(SendEmail)}:{SendEmail}{Environment.NewLine}";
-        //    ret = $"{ret}{nameof(EmailAddress)}:{EmailAddress}{Environment.NewLine}";
-
-        //    return ret;
-        //}
     }
 }

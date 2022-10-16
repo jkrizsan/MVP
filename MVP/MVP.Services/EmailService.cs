@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MVP.Data.Models;
+using MVP.Services.Factories;
 using System;
 using System.Net.Mail;
 
@@ -6,19 +8,11 @@ namespace MVP.Services
 {
     public class EmailService : IEmailService
     {
-        private const string EmailSettings = nameof(EmailSettings);
-        private const string Server = nameof(Server);
-        private const string From = nameof(From);
-        private const string Subject = nameof(Subject);
-        private const string Port = nameof(Port);
-        private const string User = nameof(User);
-        private const string Password = nameof(Password);
+        private readonly IEmailDataFactory _emailDataFactory;
 
-        public IConfiguration Configuration { get; }
-
-        public EmailService(IConfiguration configuration = null)
+        public EmailService(IEmailDataFactory emailDataFactory)
         {
-            Configuration = configuration;
+            _emailDataFactory = emailDataFactory;
         }
 
         /// <inheritdoc />
@@ -26,15 +20,18 @@ namespace MVP.Services
         {
             try
             {
+                EmailData emailData = _emailDataFactory.Create();
+
                 MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient(GetMailData(Server));
-                mail.From = new MailAddress(GetMailData(From));
+
+                mail.From = new MailAddress(emailData.From);
                 mail.To.Add(target);
-                mail.Subject = GetMailData(Subject);
+                mail.Subject = emailData.Subject;
                 mail.Body = message;
 
-                SmtpServer.Port = Convert.ToInt32(GetMailData(Port));
-                SmtpServer.Credentials = new System.Net.NetworkCredential(GetMailData(User), GetMailData(Password));
+                SmtpClient SmtpServer = new SmtpClient(emailData.Server);
+                SmtpServer.Port = Convert.ToInt32(emailData.Port);
+                SmtpServer.Credentials = new System.Net.NetworkCredential(emailData.User, emailData.Password);
                 SmtpServer.EnableSsl = true;
                 SmtpServer.Send(mail);
             }
@@ -45,10 +42,5 @@ namespace MVP.Services
 
             return true;
         }
-
-        private string GetMailData(string param) =>
-            Configuration
-            .GetSection(EmailSettings)
-            .GetSection(param).Value;
     }
 }

@@ -3,7 +3,7 @@
 namespace MVP.Services.Repositories
 {
     /// <summary>
-    /// Interface of Country Repository
+    /// Interface of the Country Repository
     /// </summary>
     public interface ICountryRepository
     {
@@ -29,13 +29,13 @@ namespace MVP.Services.Repositories
         Country GetByName(string name);
 
         /// <summary>
-        /// Delete Country
+        /// Delete a Country
         /// </summary>
         /// <param name="country"></param>
         void Delete(Country country);
 
         /// <summary>
-        /// Remove Country By Name
+        /// Remove a Country By Name
         /// </summary>
         /// <param name="id"></param>
         void DeleteById(int id);

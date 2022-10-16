@@ -6,7 +6,7 @@ using MVP.Data.Models;
 namespace MVP.Services.Repositories
 {
     /// <summary>
-    /// Product Service
+    /// Product Repository
     /// </summary>
     public class ProductRepository : IProductRepository
     {
@@ -20,13 +20,17 @@ namespace MVP.Services.Repositories
         /// <inheritdoc />
         public Product GetById(int id)
         {
-            return _context.Products.Where(p => p.Id.Equals(id)).SingleOrDefault();
+            return _context.Products
+                .Where(p => p.Id.Equals(id))
+                .SingleOrDefault();
         }
 
         /// <inheritdoc />
         public Product GetByName(string name)
         {
-            return _context.Products.Where(p => p.Name.Equals(name)).SingleOrDefault();
+            return _context.Products
+                .Where(p => p.Name.Equals(name))
+                .SingleOrDefault();
         }
 
         /// <inheritdoc />

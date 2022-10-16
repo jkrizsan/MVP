@@ -6,7 +6,7 @@ using System.Linq;
 namespace MVP.Services.Repositories
 {
     /// <summary>
-    /// Country Service
+    /// Country Repository
     /// </summary>
     public class CountryRepository : ICountryRepository
     {

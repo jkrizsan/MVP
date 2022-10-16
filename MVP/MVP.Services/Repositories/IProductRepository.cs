@@ -3,7 +3,7 @@
 namespace MVP.Services.Repositories
 {
     /// <summary>
-    /// Interface for Product Service
+    /// Interface of the Product Repository
     /// </summary>
     public interface IProductRepository
     {

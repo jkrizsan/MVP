@@ -16,7 +16,7 @@
         public double Price { get; set; }
 
         /// <summary>
-        /// Product Tax
+        /// Tax on the product
         /// </summary>
         public double Tax { get; set; }
     }

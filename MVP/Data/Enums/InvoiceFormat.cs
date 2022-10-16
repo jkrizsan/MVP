@@ -11,9 +11,7 @@ namespace MVP.Data.Enums
     {
         [JsonProperty("")]
         Unknown = 0,
-        [JsonProperty("JSON")]
         JSON,
-        [JsonProperty("HTML")]
         HTML
     }
 }

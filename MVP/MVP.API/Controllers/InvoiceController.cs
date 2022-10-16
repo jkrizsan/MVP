@@ -11,16 +11,13 @@ namespace MVP.API.Controllers
     {
         private readonly IInvoiceService _invoiceService;
         private readonly IEmailService _emailService;
-        private readonly IOrderRepository _orderService;
 
         public InvoiceController(
             IInvoiceService invoiceService,
-            IEmailService emailService,
-            IOrderRepository orderService)
+            IEmailService emailService)
         {
             _invoiceService = invoiceService;
             _emailService = emailService;
-            _orderService = orderService;
         }
 
         // POST: invoice

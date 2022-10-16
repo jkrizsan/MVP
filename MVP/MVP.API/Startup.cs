@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MVP.Data;
 using MVP.Services;
+using MVP.Services.Factories;
 using MVP.Services.Repositories;
 
 namespace MVP.API
@@ -29,7 +30,7 @@ namespace MVP.API
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IEmailDataFactory, EmailDataFactory>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>
