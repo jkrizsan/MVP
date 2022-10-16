@@ -28,11 +28,12 @@ namespace MVP.Services
                 mail.Subject = emailData.Subject;
                 mail.Body = message;
 
-                SmtpClient SmtpServer = new SmtpClient(emailData.Server);
-                SmtpServer.Port = Convert.ToInt32(emailData.Port);
-                SmtpServer.Credentials = new System.Net.NetworkCredential(emailData.User, emailData.Password);
-                SmtpServer.EnableSsl = true;
-                SmtpServer.Send(mail);
+                SmtpClient SmtpClient = new SmtpClient(emailData.Server);
+                SmtpClient.Port = Convert.ToInt32(emailData.Port);
+                SmtpClient.Credentials = new System.Net.NetworkCredential(emailData.User, emailData.Password);
+                SmtpClient.EnableSsl = true;
+
+                SmtpClient.Send(mail);
             }
             catch
             {
