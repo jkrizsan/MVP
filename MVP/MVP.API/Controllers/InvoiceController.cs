@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using MVP.Data.Exceptions;
 using MVP.Data.Models;
 using MVP.Services;
 using MVP.Services.Repositories;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace MVP.API.Controllers
 {
@@ -30,11 +31,6 @@ namespace MVP.API.Controllers
             {
                 InvoiceResponse invoiceResponse = _invoiceService.CheckAndParseInvoice(request);
 
-                if (invoiceResponse.ErrorMessage?.Length > 0)
-                {
-                    return ValidationProblem(invoiceResponse.ErrorMessage);
-                }
-
                 var response = _invoiceService.CreateInvoice(invoiceResponse);
 
                 if (invoiceResponse.SendEmail)
@@ -46,11 +42,12 @@ namespace MVP.API.Controllers
             }
             catch(ValidationException ex)
             {
-                return ValidationProblem(ex.Message);
+                ModelState.AddModelError("Validation Error", ex.ErrorMessage);
+                return BadRequest(ModelState);
             }
-            catch (Exception ex)
+            catch
             {
-                return Problem(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
             }
         }
     }

@@ -29,7 +29,7 @@ namespace MVP.Services
             {
                 InvoiceFormat.JSON => BuildJSONInvoice(response),
                 InvoiceFormat.HTML => BuildHTMLInvoice(response),
-                _ => "Error: Unexpected invoice format!",
+                _ => throw new Exception("Error: Unexpected invoice format!"),
             };
 
         /// <summary>
@@ -41,19 +41,24 @@ namespace MVP.Services
         {
             var response = new InvoiceResponse();
 
-            ParseSendEmailAndEmailAddress(request, response);
+            ParseSendEmail(request, response);
+            ParseEmailAddress(request, response);
             ParseInvoiceFormat(request, response);
             ParseCountry(request, response);
             ParseProduct(request, response);
-            SetPricesAndTaxes(request, response);
+            SetPrices(request, response);
+            SetTaxes(request, response);
 
             return response;
         }
 
-        private void ParseSendEmailAndEmailAddress(InvoiceRequest request, InvoiceResponse response)
+        private void ParseSendEmail(InvoiceRequest request, InvoiceResponse response)
         {
             response.SendEmail = request.SendEmail;
+        }
 
+        private void ParseEmailAddress(InvoiceRequest request, InvoiceResponse response)
+        {
             if (response.SendEmail && string.IsNullOrEmpty(request.EmailAddress))
             {
                 throw new ValidationException("Email Address is invalid!");
@@ -78,7 +83,7 @@ namespace MVP.Services
         {
             if (request.Products is null || request.Products.Count.Equals(0))
             {
-                throw new ValidationException("Error: Please give one or more products!");
+                throw new ValidationException("Please give one or more products!");
             }
 
             foreach (var prod in request.Products)
@@ -86,7 +91,7 @@ namespace MVP.Services
                 var prodFromDb = _productRepository.GetByName(prod.Name);
                 if (prodFromDb is null)
                 {
-                    throw new ValidationException($"Error: {prod.Name} product does not supported!");
+                    throw new ValidationException($"The '{prod.Name}' product does not supported!");
                 }
 
                 for (int i = 0; i < prod.Quantity; i++)
@@ -105,17 +110,20 @@ namespace MVP.Services
             var country = _countryRepository.GetByName(request.Country);
             if (country is null)
             {
-                throw new ValidationException($"Error: {request.Country} country does not supported!");
+                throw new ValidationException($"The '{request.Country}' country does not supported!");
             }
 
             response.Country = country;
         }
 
-        private void SetPricesAndTaxes(InvoiceRequest request, InvoiceResponse response)
+        private void SetPrices(InvoiceRequest request, InvoiceResponse response)
+        {
+            response.TotalPrices = Math.Round(response.ProductPricess.Select(x => x.Price).ToList().Sum(), 2);
+        }
+
+        private void SetTaxes(InvoiceRequest request, InvoiceResponse response)
         {
             response.TotalTaxes = Math.Round(response.ProductPricess.Select(x => x.Tax).ToList().Sum(), 2);
-
-            response.TotalPrices = Math.Round(response.ProductPricess.Select(x => x.Price).ToList().Sum(), 2);
         }
 
         private string BuildHTMLInvoice(InvoiceResponse responseDto)

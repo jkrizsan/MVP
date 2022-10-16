@@ -45,11 +45,6 @@ namespace MVP.Data.Models
         public double TotalTaxes { get; set; }
 
         /// <summary>
-        /// Error Message
-        /// </summary>
-        public string ErrorMessage { get; set; }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public InvoiceResponse()
