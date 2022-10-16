@@ -1,4 +1,5 @@
 ﻿using MVP.Data.Enums;
+using MVP.Data.Exceptions;
 using MVP.Data.Models;
 using MVP.Services.Repositories;
 using Newtonsoft.Json;
@@ -55,8 +56,7 @@ namespace MVP.Services
 
             if (response.SendEmail && string.IsNullOrEmpty(request.EmailAddress))
             {
-                response.ErrorMessage = "Error: Please give a valid Email Address!";
-                return;
+                throw new ValidationException("Email Address is invalid!");
             }
 
             response.EmailAddress = request.EmailAddress;
@@ -66,25 +66,19 @@ namespace MVP.Services
         {
             if(request.InvoiceFormat == InvoiceFormat.Unknown)
             {
-                response.ErrorMessage = $"Error: '{request.InvoiceFormat}' invoice format does not supported!";
+                throw new ValidationException("InvoiceFormat is invalid!");
             }
+
             response.InvoiceFormat = request.InvoiceFormat;
 
             return response;
         }
-            //request.InvoiceFormat switch
-            //{
-            //    "JSON" => response.InvoiceFormat = InvoiceFormat.JSON,
-            //    "HTML" => response.InvoiceFormat = InvoiceFormat.HTML,
-            //    _ => response.ErrorMessage = $"Error: '{request.InvoiceFormat}' invoice format does not supported!",
-            //};
 
         private void ParseProduct(InvoiceRequest request, InvoiceResponse response)
         {
             if (request.Products is null || request.Products.Count.Equals(0))
             {
-                response.ErrorMessage = "Error: Please give one or more products!";
-                return;
+                throw new ValidationException("Error: Please give one or more products!");
             }
 
             foreach (var prod in request.Products)
@@ -92,9 +86,9 @@ namespace MVP.Services
                 var prodFromDb = _productRepository.GetByName(prod.Name);
                 if (prodFromDb is null)
                 {
-                    response.ErrorMessage = $"Error: {prod.Name} product does not supported!";
-                    return;
+                    throw new ValidationException($"Error: {prod.Name} product does not supported!");
                 }
+
                 for (int i = 0; i < prod.Quantity; i++)
                 {
                     var pp = new ProductPrice();
@@ -111,8 +105,7 @@ namespace MVP.Services
             var country = _countryRepository.GetByName(request.Country);
             if (country is null)
             {
-                response.ErrorMessage = $"Error: {request.Country} country does not supported!";
-                return;
+                throw new ValidationException($"Error: {request.Country} country does not supported!");
             }
 
             response.Country = country;
@@ -193,7 +186,7 @@ namespace MVP.Services
             }
             catch (Exception e)
             {
-                result = $"JSON format exception: {e.Message}";
+                throw new ValidationException($"JSON format exception: {e.Message}");
             }
 
             return result;

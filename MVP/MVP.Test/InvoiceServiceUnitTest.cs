@@ -1,5 +1,6 @@
 ﻿using Moq;
 using MVP.Data.Enums;
+using MVP.Data.Exceptions;
 using MVP.Data.Models;
 using MVP.Services;
 using MVP.Services.Repositories;
@@ -60,9 +61,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            var response = invoiceService.CheckAndParseInvoice(request);
-
-            Assert.IsTrue(response.ErrorMessage.Contains("Error: Poland country does not supported!"));
+            Assert.Throws<ValidationException>(() => invoiceService.CheckAndParseInvoice(request), $"Error: {request.Country} country does not supported!");
         }
 
         [Test]
@@ -80,9 +79,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            var response = invoiceService.CheckAndParseInvoice(request);
-
-            Assert.IsTrue(response.ErrorMessage.Contains("Error: Car product does not supported!"));
+            Assert.Throws<ValidationException>(() => invoiceService.CheckAndParseInvoice(request), $"Error: {request.Products[0].Name} product does not supported!");
         }
 
         [Test]
@@ -95,9 +92,8 @@ namespace MVP.Test
                 SendEmail = true,
                 EmailAddress = "something@something.com"
             };
-            var response = invoiceService.CheckAndParseInvoice(request);
 
-            Assert.IsTrue(response.ErrorMessage.Contains("Error: Please give one or more products!"));
+            Assert.Throws<ValidationException>(() => invoiceService.CheckAndParseInvoice(request), "Error: Please give one or more products!");
         }
 
         [Test]
@@ -114,9 +110,7 @@ namespace MVP.Test
                 SendEmail = true
             };
 
-            var response = invoiceService.CheckAndParseInvoice(request);
-
-            Assert.IsTrue(response.ErrorMessage.Contains("Error: Please give a valid Email Address!"));
+            Assert.Throws<ValidationException>(() => invoiceService.CheckAndParseInvoice(request), "Email Address is invalid!");
         }
 
         [Test]
@@ -134,9 +128,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            var response = invoiceService.CheckAndParseInvoice(request);
-
-            Assert.IsTrue(response.ErrorMessage.Contains($"Error: '{InvoiceFormat.Unknown}' invoice format does not supported!"));
+            Assert.Throws<ValidationException>(() => invoiceService.CheckAndParseInvoice(request), $"InvoiceFormat is invalid!");
         }
     }
 }

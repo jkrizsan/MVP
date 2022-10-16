@@ -2,11 +2,13 @@
 using MVP.Data.Models;
 using MVP.Services;
 using MVP.Services.Repositories;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace MVP.API.Controllers
 {
-    [ApiController]
     [Route("[controller]")]
+    [ApiController]
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
@@ -24,26 +26,32 @@ namespace MVP.API.Controllers
         [HttpPost]
         public ActionResult Post([FromBody]InvoiceRequest request)
         {
-            if (request is null)
+            try
             {
-                return ValidationProblem();
+                InvoiceResponse invoiceResponse = _invoiceService.CheckAndParseInvoice(request);
+
+                if (invoiceResponse.ErrorMessage?.Length > 0)
+                {
+                    return ValidationProblem(invoiceResponse.ErrorMessage);
+                }
+
+                var response = _invoiceService.CreateInvoice(invoiceResponse);
+
+                if (invoiceResponse.SendEmail)
+                {
+                    _emailService.SendMail(response, invoiceResponse.EmailAddress);
+                }
+
+                return Ok(response);
             }
-
-            InvoiceResponse invoiceResponse = _invoiceService.CheckAndParseInvoice(request);
-
-            if(invoiceResponse.ErrorMessage?.Length > 0)
+            catch(ValidationException ex)
             {
-                return ValidationProblem(invoiceResponse.ErrorMessage);
+                return ValidationProblem(ex.Message);
             }
-
-            var response = _invoiceService.CreateInvoice(invoiceResponse);
-
-            if (invoiceResponse.SendEmail)
+            catch (Exception ex)
             {
-                _emailService.SendMail(response, invoiceResponse.EmailAddress);
+                return Problem(ex.Message);
             }
-
-            return Ok(response);
         }
     }
 }
