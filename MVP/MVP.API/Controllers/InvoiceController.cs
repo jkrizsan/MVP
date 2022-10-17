@@ -45,6 +45,11 @@ namespace MVP.API.Controllers
                 ModelState.AddModelError("Validation Error", ex.ErrorMessage);
                 return BadRequest(ModelState);
             }
+            catch (EmailException ex)
+            {
+                ModelState.AddModelError("Email Error", ex.ErrorMessage);
+                return BadRequest(ModelState);
+            }
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");

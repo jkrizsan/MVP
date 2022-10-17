@@ -32,9 +32,9 @@ namespace MVP.Test
         [Test]
         public void Create_OK()
         {
-            EmailDataFactory emailDataFactory = new EmailDataFactory(_configuration);
+            EmailFactory emailDataFactory = new EmailFactory(_configuration);
 
-            EmailData result = emailDataFactory.Create();
+            EmailData result = emailDataFactory.CreateEmailData();
 
             Assert.AreEqual($"{nameof(EmailData.Server)}", result.Server);
             Assert.AreEqual($"{nameof(EmailData.Port)}", result.Port);

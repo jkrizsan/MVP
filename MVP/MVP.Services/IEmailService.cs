@@ -11,6 +11,6 @@
         /// <param name="message">Message of the Mail</param>
         /// <param name="target">Email Address</param>
         /// <returns></returns>
-        bool SendMail(string message, string target);
+        void SendMail(string message, string target);
     }
 }

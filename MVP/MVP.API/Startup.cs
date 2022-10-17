@@ -24,13 +24,13 @@ namespace MVP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddSwaggerGen();
-
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IEmailDataFactory, EmailDataFactory>();
+            services.AddScoped<IEmailFactory, EmailFactory>();
+            services.AddScoped<IMessageFactory, InvoiceMessageFactory>();
+            services.AddScoped<IInvoiceBuilderServiceFactory, InvoiceBuilderServiceFactory>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>
