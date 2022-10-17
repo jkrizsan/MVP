@@ -113,6 +113,5 @@ namespace MVP.Services
         {
             response.TotalTaxes = Math.Round(response.ProductPricess.Select(x => x.Tax).ToList().Sum(), 2);
         }
-
     }
 }

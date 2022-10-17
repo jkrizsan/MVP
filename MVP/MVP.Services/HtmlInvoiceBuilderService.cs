@@ -12,7 +12,7 @@ namespace MVP.Services
         /// <inheritdoc />
         public string Build(InvoiceResponse response)
         {
-            StringBuilder invoice = new StringBuilder(100);
+            StringBuilder invoice = new StringBuilder(1000);
 
             invoice.Append($@"<!DOCTYPE html>{Environment.NewLine}");
             invoice.Append($@"<html>{Environment.NewLine}");

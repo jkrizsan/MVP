@@ -19,9 +19,9 @@ namespace MVP.Services
             {
                 result = JsonConvert.SerializeObject(response);
             }
-            catch (Exception e)
+            catch
             {
-                throw new ValidationException($"JSON format exception: {e.Message}");
+                throw new ValidationException($"JSON Serialize error happened!");
             }
 
             return result;
