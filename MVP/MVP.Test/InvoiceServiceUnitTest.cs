@@ -1,11 +1,9 @@
 ﻿using Moq;
 using MVP.Data.Enums;
-using MVP.Data.Exceptions;
 using MVP.Data.Models;
 using MVP.Services;
 using MVP.Services.Abstractions;
 using MVP.Services.Factories;
-using MVP.Services.Repositories;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -16,10 +14,6 @@ namespace MVP.Test
     {
         private InvoiceService _invoiceService;
 
-        private Mock<ICountryRepository> _countryRepositoryMock;
-
-        private Mock<IProductRepository> _productRepositoryMock;
-
         private Mock<IMessageFactory> _messageFactoryMock;
 
         private Mock<IInvoiceBuilderServiceFactory> _invoiceBuilderServiceFactoryMock;
@@ -27,12 +21,6 @@ namespace MVP.Test
         [SetUp]
         public void Setup()
         {
-            _countryRepositoryMock = new Mock<ICountryRepository>();
-            _countryRepositoryMock.Setup(x => x.GetByName("Hungary")).Returns(new Country() {Name = "Hungary", Tax = 27 });
-
-            _productRepositoryMock = new Mock<IProductRepository>();
-            _productRepositoryMock.Setup(x => x.GetByName("Apple")).Returns(new Product() { Name = "Apple", Price = 100 });
-
             _messageFactoryMock = new Mock<IMessageFactory>();
             _messageFactoryMock.Setup(x => x.Create(new InvoiceResponse())).Returns(new InvoiceMessage(new InvoiceResponse()));
 
@@ -41,113 +29,7 @@ namespace MVP.Test
 
             SetupInvoiceService();
         }
-
-        [Test]
-        public void CheckAndParseInvoice_GoodData_OK()
-        {
-            var request = new InvoiceRequest()
-            {
-                Products = new List<InvoiceProduct>()
-                {
-                    new InvoiceProduct(){ Name = "Apple", Quantity = 2}
-                },
-                Country = "Hungary",
-                InvoiceFormat = InvoiceFormat.JSON,
-                SendEmail = true,
-                EmailAddress = "something@something.com"
-            };
-
-            var response = _invoiceService.CheckAndParseInvoice(request);
-
-            Assert.AreEqual(response.TotalPrices, 254);
-            Assert.AreEqual(response.TotalTaxes, 54);
-        }
-
-        [Test]
-        public void CheckAndParseInvoice_UnsupportedCountry_ErrorMessage()
-        {
-            var request = new InvoiceRequest()
-            {
-                Products = new List<InvoiceProduct>()
-                {
-                    new InvoiceProduct(){ Name = "Apple", Quantity = 2}
-                },
-                Country = "Poland",
-                InvoiceFormat = InvoiceFormat.JSON,
-                SendEmail = true,
-                EmailAddress = "something@something.com"
-            };
-
-            Assert.Throws<ValidationException>(() => _invoiceService.CheckAndParseInvoice(request), $"Error: {request.Country} country does not supported!");
-        }
-
-        [Test]
-        public void CheckAndParseInvoice_UnsupportedProduct_ErrorMessage()
-        {
-            var request = new InvoiceRequest()
-            {
-                Products = new List<InvoiceProduct>()
-                {
-                    new InvoiceProduct(){ Name = "Car", Quantity = 2}
-                },
-                Country = "Hungary",
-                InvoiceFormat = InvoiceFormat.JSON,
-                SendEmail = true,
-                EmailAddress = "something@something.com"
-            };
-
-            Assert.Throws<ValidationException>(() => _invoiceService.CheckAndParseInvoice(request), $"Error: {request.Products[0].Name} product does not supported!");
-        }
-
-        [Test]
-        public void CheckAndParseInvoice_WithoutProduct_ErrorMessage()
-        {
-            var request = new InvoiceRequest()
-            {
-                Country = "Hungary",
-                InvoiceFormat = InvoiceFormat.JSON,
-                SendEmail = true,
-                EmailAddress = "something@something.com"
-            };
-
-            Assert.Throws<ValidationException>(() => _invoiceService.CheckAndParseInvoice(request), "Error: Please give one or more products!");
-        }
-
-        [Test]
-        public void CheckAndParseInvoice_WithoutEmail_ErrorMessage()
-        {
-            var request = new InvoiceRequest()
-            {
-                Products = new List<InvoiceProduct>()
-                {
-                    new InvoiceProduct(){ Name = "Apple", Quantity = 2}
-                },
-                Country = "Hungary",
-                InvoiceFormat = InvoiceFormat.JSON,
-                SendEmail = true
-            };
-
-            Assert.Throws<ValidationException>(() => _invoiceService.CheckAndParseInvoice(request), "Email Address is invalid!");
-        }
-
-        [Test]
-        public void CheckAndParseInvoice_BadInvoiceFormat_ErrorMessage()
-        {
-            var request = new InvoiceRequest()
-            {
-                Products = new List<InvoiceProduct>()
-                {
-                    new InvoiceProduct(){ Name = "Apple", Quantity = 2},
-                },
-                Country = "Hungary",
-                InvoiceFormat = InvoiceFormat.Unknown,
-                SendEmail = true,
-                EmailAddress = "something@something.com"
-            };
-
-            Assert.Throws<ValidationException>(() => _invoiceService.CheckAndParseInvoice(request), $"InvoiceFormat is invalid!");
-        }
-
+ 
         [Test]
         public void CreateInvoice_JsonInvocieBuilder_Ok()
         {
@@ -217,7 +99,7 @@ namespace MVP.Test
 
         private void SetupInvoiceService()
         {
-            _invoiceService = new InvoiceService(_countryRepositoryMock.Object, _productRepositoryMock.Object, _messageFactoryMock.Object, _invoiceBuilderServiceFactoryMock.Object);
+            _invoiceService = new InvoiceService(_messageFactoryMock.Object, _invoiceBuilderServiceFactoryMock.Object);
         }
 
         private InvoiceResponse CreateInvoiceResponse(InvoiceFormat invoiceFormat)

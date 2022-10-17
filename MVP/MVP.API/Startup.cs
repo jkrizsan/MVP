@@ -31,6 +31,7 @@ namespace MVP.API
             services.AddScoped<IEmailFactory, EmailFactory>();
             services.AddScoped<IMessageFactory, InvoiceMessageFactory>();
             services.AddScoped<IInvoiceBuilderServiceFactory, InvoiceBuilderServiceFactory>();
+            services.AddScoped<IInvoiceProcessorService, InvoiceProcessorService>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;
             services.AddDbContext<MVPContext>(options =>

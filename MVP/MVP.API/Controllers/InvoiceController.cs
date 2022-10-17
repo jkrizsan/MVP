@@ -13,13 +13,18 @@ namespace MVP.API.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
+
+        private readonly IInvoiceProcessorService _invoiceProcessorService;
+
         private readonly IEmailService _emailService;
 
         public InvoiceController(
             IInvoiceService invoiceService,
+            IInvoiceProcessorService invoiceProcessorService,
             IEmailService emailService)
         {
             _invoiceService = invoiceService;
+            _invoiceProcessorService = invoiceProcessorService;
             _emailService = emailService;
         }
 
@@ -29,7 +34,7 @@ namespace MVP.API.Controllers
         {
             try
             {
-                InvoiceResponse invoiceResponse = _invoiceService.CheckAndParseInvoice(request);
+                InvoiceResponse invoiceResponse = _invoiceProcessorService.CheckAndParseInvoice(request);
 
                 var response = _invoiceService.CreateInvoice(invoiceResponse);
 
