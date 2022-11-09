@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace MVP.Data.Models
 {
     /// <summary>
@@ -9,7 +11,7 @@ namespace MVP.Data.Models
         /// <summary>
         /// Primery Key
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Product Name
@@ -20,5 +22,10 @@ namespace MVP.Data.Models
         /// Product Price
         /// </summary>
         public double Price { get; set; }
+
+        public Product()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace MVP.Data.Models
+﻿using System;
+
+namespace MVP.Data.Models
 {
     /// <summary>
     /// Country
@@ -8,7 +10,7 @@
         /// <summary>
         /// Primary key
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Country name
@@ -19,5 +21,10 @@
         /// Tax rate in the country
         /// </summary>
         public double Tax { get; set; }
+
+        public Country()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

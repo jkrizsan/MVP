@@ -113,7 +113,7 @@ namespace MVP.Test
             return new InvoiceResponse()
             {
                 InvoiceFormat = invoiceFormat,
-                Country = new Country() { Id = 1, Name = "Hungary", Tax = 27 },
+                Country = new Country() { Id = Guid.NewGuid(), Name = "Hungary", Tax = 27 },
                 SendEmail = true,
                 EmailAddress = "XYZ@ABC.COM",
                 TotalPrices = 124.0,

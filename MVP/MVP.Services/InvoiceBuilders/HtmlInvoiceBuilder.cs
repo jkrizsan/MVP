@@ -28,14 +28,7 @@ namespace Services.InvoiceBuilders
             invoice.Append($@"</thead>{Environment.NewLine}");
             invoice.Append($@"<tbody>{Environment.NewLine}");
 
-            foreach (var item in response.ProductPricess)
-            {
-                invoice.Append($@"<tr>{Environment.NewLine}");
-                invoice.Append($@"<td>{item.Name}</td>{Environment.NewLine}");
-                invoice.Append($@"<td>{item.Price}</td>{Environment.NewLine}");
-                invoice.Append($@"<td>{item.Tax}</td>{Environment.NewLine}");
-                invoice.Append($@"</tr>{Environment.NewLine}");
-            }
+            AddProductPrices(invoice, response);
 
             invoice.Append($@"</tbody>{Environment.NewLine}");
             invoice.Append($@"</table>{Environment.NewLine}");
@@ -67,5 +60,18 @@ namespace Services.InvoiceBuilders
 
             return invoice.ToString();
         }
+
+        private void AddProductPrices(StringBuilder invoice, InvoiceResponse response)
+        {
+            foreach (var productPrice in response.ProductPricess)
+            {
+                invoice.Append($@"<tr>{Environment.NewLine}");
+                invoice.Append($@"<td>{productPrice.Name}</td>{Environment.NewLine}");
+                invoice.Append($@"<td>{productPrice.Price}</td>{Environment.NewLine}");
+                invoice.Append($@"<td>{productPrice.Tax}</td>{Environment.NewLine}");
+                invoice.Append($@"</tr>{Environment.NewLine}");
+            }
+        }
+
     }
 }
