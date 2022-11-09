@@ -10,8 +10,16 @@ namespace MVP.Services
         /// <summary>
         /// Create Invoice
         /// </summary>
-        /// <param name="responseDto"></param>
+        /// <param name="response"></param>
         /// <returns></returns>
-        string CreateInvoice(InvoiceResponse responseDto);
+        string CreateInvoice(InvoiceResponse response);
+
+        /// <summary>
+        /// Send Invoice Via Email if needed
+        /// </summary>
+        /// <param name="invoice"></param>
+        /// <param name="invoiceResponse"></param>
+        /// <returns></returns>
+        void SendInvoiceViaEmail(string invoice, InvoiceResponse invoiceResponse);
     }
 }

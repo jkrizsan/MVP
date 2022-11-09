@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MVP.Services.Exceptions;
 using MVP.Services.DataModels;
 using MVP.Services;
-using MVP.Services.Repositories;
-using System;
 
 namespace MVP.API.Controllers
 {
@@ -16,16 +14,12 @@ namespace MVP.API.Controllers
 
         private readonly IInvoiceProcessorService _invoiceProcessorService;
 
-        private readonly IEmailService _emailService;
-
         public InvoiceController(
             IInvoiceService invoiceService,
-            IInvoiceProcessorService invoiceProcessorService,
-            IEmailService emailService)
+            IInvoiceProcessorService invoiceProcessorService)
         {
             _invoiceService = invoiceService;
             _invoiceProcessorService = invoiceProcessorService;
-            _emailService = emailService;
         }
 
         // POST: invoice
@@ -34,14 +28,11 @@ namespace MVP.API.Controllers
         {
             try
             {
-                InvoiceResponse invoiceResponse = _invoiceProcessorService.CheckAndParseInvoice(request);
+                InvoiceResponse invoiceResponse = _invoiceProcessorService.ValidateAndMapInvoice(request);
 
                 var response = _invoiceService.CreateInvoice(invoiceResponse);
 
-                if (invoiceResponse.SendEmail)
-                {
-                    _emailService.SendMail(response, invoiceResponse.EmailAddress);
-                }
+                _invoiceService.SendInvoiceViaEmail(response, invoiceResponse);
 
                 return Ok(response);
             }

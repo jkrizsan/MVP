@@ -18,7 +18,7 @@ namespace MVP.Services
         public void SendMail(string message, string target)
         {
             try
-            {
+            {                
                 EmailData emailData = _emailDataFactory.CreateEmailData();
 
                 MailMessage mail = _emailDataFactory.CreateMailMessage(emailData, target, message);
@@ -29,7 +29,7 @@ namespace MVP.Services
             }
             catch
             {
-                throw new EmailException("Email sending is failed!");
+               throw new EmailException("Email sending is failed!");
             }
         }
     }

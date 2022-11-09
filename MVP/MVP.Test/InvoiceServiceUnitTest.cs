@@ -17,11 +17,15 @@ namespace MVP.Test
 
         private Mock<IMessageFactory> _messageFactoryMock;
 
+        private Mock<IEmailService> _emailServiceMock;
+
         private Mock<IInvoiceBuilderServiceFactory> _invoiceBuilderServiceFactoryMock;
 
         [SetUp]
         public void Setup()
         {
+            _emailServiceMock = new Mock<IEmailService>();
+
             _messageFactoryMock = new Mock<IMessageFactory>();
             _messageFactoryMock.Setup(x => x.Create(new InvoiceResponse())).Returns(new InvoiceMessage(new InvoiceResponse()));
 
@@ -100,7 +104,7 @@ namespace MVP.Test
 
         private void SetupInvoiceService()
         {
-            _invoiceService = new InvoiceService(_messageFactoryMock.Object, _invoiceBuilderServiceFactoryMock.Object);
+            _invoiceService = new InvoiceService(_messageFactoryMock.Object, _emailServiceMock.Object, _invoiceBuilderServiceFactoryMock.Object);
         }
 
         private InvoiceResponse CreateInvoiceResponse(InvoiceFormat invoiceFormat)

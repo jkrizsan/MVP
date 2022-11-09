@@ -8,10 +8,10 @@ namespace MVP.Services
     public interface IInvoiceProcessorService
     {
         /// <summary>
-        /// Validate and parse invoice request data
+        /// Validate and map invoice request data
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-        InvoiceResponse CheckAndParseInvoice(InvoiceRequest requestDto);
+        InvoiceResponse ValidateAndMapInvoice(InvoiceRequest requestDto);
     }
 }

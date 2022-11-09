@@ -45,7 +45,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            var response = _invoiceProcessorServic.CheckAndParseInvoice(request);
+            var response = _invoiceProcessorServic.ValidateAndMapInvoice(request);
 
             Assert.AreEqual(response.TotalPrices, 254);
             Assert.AreEqual(response.TotalTaxes, 54);
@@ -66,7 +66,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.CheckAndParseInvoice(request), $"Error: {request.Country} country does not supported!");
+            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), $"Error: {request.Country} country does not supported!");
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.CheckAndParseInvoice(request), $"Error: {request.Products[0].Name} product does not supported!");
+            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), $"Error: {request.Products[0].Name} product does not supported!");
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.CheckAndParseInvoice(request), "Error: Please give one or more products!");
+            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), "Error: Please give one or more products!");
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace MVP.Test
                 SendEmail = true
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.CheckAndParseInvoice(request), "Email Address is invalid!");
+            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), "Email Address is invalid!");
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.CheckAndParseInvoice(request), $"InvoiceFormat is invalid!");
+            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), $"InvoiceFormat is invalid!");
         }
     }
 }

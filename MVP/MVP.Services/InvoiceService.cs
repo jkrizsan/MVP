@@ -3,6 +3,7 @@ using MVP.Services.DataModels;
 using MVP.Services.Abstractions;
 using MVP.Services.Factories;
 using System;
+using System.Threading.Tasks;
 
 namespace MVP.Services
 {
@@ -13,13 +14,17 @@ namespace MVP.Services
     {
         private readonly IMessageFactory _messageFactory;
 
+        private readonly IEmailService _emailService;
+
         private readonly IInvoiceBuilderServiceFactory _invoiceBuilderServiceFactory;
 
         public InvoiceService(
             IMessageFactory messageFactory,
+            IEmailService emailService,
             IInvoiceBuilderServiceFactory invoiceBuilderServiceFactory)
         {
             _messageFactory = messageFactory;
+            _emailService = emailService;
             _invoiceBuilderServiceFactory = invoiceBuilderServiceFactory;
         }
 
@@ -41,6 +46,15 @@ namespace MVP.Services
             };
 
             return message.Build();
+        }
+
+        /// <inheritdoc />
+        public void SendInvoiceViaEmail(string invoice, InvoiceResponse invoiceResponse)
+        {
+            if (invoiceResponse.SendEmail)
+            {
+                Task.Run(() => _emailService.SendMail(invoice, invoiceResponse.EmailAddress));
+            }
         }
     }
 }

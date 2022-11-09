@@ -24,7 +24,7 @@ namespace MVP.Services
         }
 
         /// <inheritdoc />
-        public InvoiceResponse CheckAndParseInvoice(InvoiceRequest request)
+        public InvoiceResponse ValidateAndMapInvoice(InvoiceRequest request)
         {
             var response = new InvoiceResponse();
 
