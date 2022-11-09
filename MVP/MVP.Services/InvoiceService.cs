@@ -4,6 +4,7 @@ using MVP.Services.Abstractions;
 using MVP.Services.Factories;
 using System;
 using System.Threading.Tasks;
+using Services.InvoiceBuilders;
 
 namespace MVP.Services
 {
@@ -16,12 +17,12 @@ namespace MVP.Services
 
         private readonly IEmailService _emailService;
 
-        private readonly IInvoiceBuilderServiceFactory _invoiceBuilderServiceFactory;
+        private readonly IInvoiceBuilderFactory _invoiceBuilderServiceFactory;
 
         public InvoiceService(
             IMessageFactory messageFactory,
             IEmailService emailService,
-            IInvoiceBuilderServiceFactory invoiceBuilderServiceFactory)
+            IInvoiceBuilderFactory invoiceBuilderServiceFactory)
         {
             _messageFactory = messageFactory;
             _emailService = emailService;
@@ -36,10 +37,10 @@ namespace MVP.Services
             switch(response.InvoiceFormat)
             {
                 case InvoiceFormat.JSON:
-                    message.Builder = _invoiceBuilderServiceFactory.Create<JsonInvoiceBuilderService>();
+                    message.Builder = _invoiceBuilderServiceFactory.Create<JsonInvoiceBuilder>();
                     break;
                 case InvoiceFormat.HTML:
-                    message.Builder = _invoiceBuilderServiceFactory.Create<HtmlInvoiceBuilderService>();
+                    message.Builder = _invoiceBuilderServiceFactory.Create<HtmlInvoiceBuilder>();
                     break;
                 default:
                     throw new Exception("Unexpected invoice format!");

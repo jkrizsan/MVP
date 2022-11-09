@@ -1,9 +1,9 @@
 ﻿namespace MVP.Services.Factories
 {
     /// <summary>
-    /// InvoiceBuilderServiceFactory class
+    /// InvoiceBuilderFactory class
     /// </summary>
-    public class InvoiceBuilderServiceFactory : IInvoiceBuilderServiceFactory
+    public class InvoiceBuilderFactory : IInvoiceBuilderFactory
     {
         /// <inheritdoc />
         public T Create<T>() where T : new()

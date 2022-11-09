@@ -30,7 +30,7 @@ namespace MVP.API
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IEmailFactory, EmailFactory>();
             services.AddScoped<IMessageFactory, InvoiceMessageFactory>();
-            services.AddScoped<IInvoiceBuilderServiceFactory, InvoiceBuilderServiceFactory>();
+            services.AddScoped<IInvoiceBuilderFactory, InvoiceBuilderFactory>();
             services.AddScoped<IInvoiceProcessorService, InvoiceProcessorService>();
 
             var options = new DbContextOptionsBuilder<MVPContext>().Options;

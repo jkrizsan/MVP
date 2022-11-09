@@ -1,12 +1,13 @@
-﻿namespace MVP.Services.Factories
+﻿
+namespace MVP.Services.Factories
 {
     /// <summary>
-    /// Interface of InvoiceBuilderServiceFactory
+    /// Interface of InvoiceBuilderFactory
     /// </summary>
-    public interface IInvoiceBuilderServiceFactory
+    public interface IInvoiceBuilderFactory
     {
         /// <summary>
-        /// Create an InvoiceBuilderService instance
+        /// Create an InvoiceBuilder instance
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>

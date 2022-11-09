@@ -6,6 +6,7 @@ using MVP.Services.Abstractions;
 using MVP.Services.DataModels;
 using MVP.Services.Factories;
 using NUnit.Framework;
+using Services.InvoiceBuilders;
 using System;
 using System.Collections.Generic;
 
@@ -19,7 +20,7 @@ namespace MVP.Test
 
         private Mock<IEmailService> _emailServiceMock;
 
-        private Mock<IInvoiceBuilderServiceFactory> _invoiceBuilderServiceFactoryMock;
+        private Mock<IInvoiceBuilderFactory> _invoiceBuilderServiceFactoryMock;
 
         [SetUp]
         public void Setup()
@@ -29,8 +30,8 @@ namespace MVP.Test
             _messageFactoryMock = new Mock<IMessageFactory>();
             _messageFactoryMock.Setup(x => x.Create(new InvoiceResponse())).Returns(new InvoiceMessage(new InvoiceResponse()));
 
-            _invoiceBuilderServiceFactoryMock = new Mock<IInvoiceBuilderServiceFactory>();
-            _invoiceBuilderServiceFactoryMock.Setup(x => x.Create<JsonInvoiceBuilderService>()).Returns(new JsonInvoiceBuilderService());
+            _invoiceBuilderServiceFactoryMock = new Mock<IInvoiceBuilderFactory>();
+            _invoiceBuilderServiceFactoryMock.Setup(x => x.Create<JsonInvoiceBuilder>()).Returns(new JsonInvoiceBuilder());
 
             SetupInvoiceService();
         }
@@ -44,9 +45,9 @@ namespace MVP.Test
 
             SetupMessageFactory(response, testString);
 
-            _invoiceBuilderServiceFactoryMock = new Mock<IInvoiceBuilderServiceFactory>();
-            _invoiceBuilderServiceFactoryMock.Setup(x => x.Create<JsonInvoiceBuilderService>())
-                .Returns(new JsonInvoiceBuilderService());
+            _invoiceBuilderServiceFactoryMock = new Mock<IInvoiceBuilderFactory>();
+            _invoiceBuilderServiceFactoryMock.Setup(x => x.Create<JsonInvoiceBuilder>())
+                .Returns(new JsonInvoiceBuilder());
 
             SetupInvoiceService();
 
@@ -64,9 +65,9 @@ namespace MVP.Test
 
             SetupMessageFactory(response, testString);
 
-            _invoiceBuilderServiceFactoryMock = new Mock<IInvoiceBuilderServiceFactory>();
-            _invoiceBuilderServiceFactoryMock.Setup(x => x.Create<HtmlInvoiceBuilderService>())
-                .Returns(new HtmlInvoiceBuilderService());
+            _invoiceBuilderServiceFactoryMock = new Mock<IInvoiceBuilderFactory>();
+            _invoiceBuilderServiceFactoryMock.Setup(x => x.Create<HtmlInvoiceBuilder>())
+                .Returns(new HtmlInvoiceBuilder());
 
             SetupInvoiceService();
 
@@ -84,9 +85,9 @@ namespace MVP.Test
 
             SetupMessageFactory(response, testString);
 
-            _invoiceBuilderServiceFactoryMock = new Mock<IInvoiceBuilderServiceFactory>();
-            _invoiceBuilderServiceFactoryMock.Setup(x => x.Create<HtmlInvoiceBuilderService>())
-                .Returns(new HtmlInvoiceBuilderService());
+            _invoiceBuilderServiceFactoryMock = new Mock<IInvoiceBuilderFactory>();
+            _invoiceBuilderServiceFactoryMock.Setup(x => x.Create<HtmlInvoiceBuilder>())
+                .Returns(new HtmlInvoiceBuilder());
 
             SetupInvoiceService();
 

@@ -2,12 +2,12 @@
 using System;
 using System.Text;
 
-namespace MVP.Services
+namespace Services.InvoiceBuilders
 {
     /// <summary>
-    /// Html Invoice Builder Service class
+    /// Html Invoice Builder
     /// </summary>
-    public class HtmlInvoiceBuilderService : IInvoiceBuilderService
+    public class HtmlInvoiceBuilder : IInvoiceBuilder
     {
         /// <inheritdoc />
         public string Build(InvoiceResponse response)

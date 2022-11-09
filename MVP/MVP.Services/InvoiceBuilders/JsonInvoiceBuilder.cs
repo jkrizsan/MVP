@@ -1,15 +1,13 @@
-﻿using MVP.Data.Models;
-using MVP.Services.DataModels;
+﻿using MVP.Services.DataModels;
 using Newtonsoft.Json;
-using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MVP.Services
+namespace Services.InvoiceBuilders
 {
     /// <summary>
-    /// JSON Invoice Builder Service class
+    /// JSON Invoice Builder
     /// </summary>
-    public class JsonInvoiceBuilderService : IInvoiceBuilderService
+    public class JsonInvoiceBuilder : IInvoiceBuilder
     {
         /// <inheritdoc />
         public string Build(InvoiceResponse response)

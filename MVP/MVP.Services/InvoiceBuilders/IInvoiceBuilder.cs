@@ -1,11 +1,11 @@
 ﻿using MVP.Services.DataModels;
 
-namespace MVP.Services
+namespace Services.InvoiceBuilders
 {
     /// <summary>
-    /// Interface of InvoiceBuilder service
+    /// Interface of InvoiceBuilder
     /// </summary>
-    public interface IInvoiceBuilderService
+    public interface IInvoiceBuilder
     {
         /// <summary>
         /// Build the final invoice format

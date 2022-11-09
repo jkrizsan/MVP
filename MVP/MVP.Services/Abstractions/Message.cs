@@ -1,4 +1,5 @@
 ﻿using MVP.Services.DataModels;
+using Services.InvoiceBuilders;
 
 namespace MVP.Services.Abstractions
 {
@@ -15,7 +16,7 @@ namespace MVP.Services.Abstractions
         /// <summary>
         /// Ivoice builder service
         /// </summary>
-        public IInvoiceBuilderService Builder { get; set; }
+        public IInvoiceBuilder Builder { get; set; }
 
         /// <summary>
         /// Call the builder method
