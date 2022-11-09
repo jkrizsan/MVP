@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\MVP.Data.csproj" />
-    <ProjectReference Include="..\MVP.Services\MVP.Services.csproj" />
+    <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\MVP.Services\Services.csproj" />
   </ItemGroup>
 
 </Project>

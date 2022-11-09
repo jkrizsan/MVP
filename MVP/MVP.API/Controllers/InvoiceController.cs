@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MVP.Data.Exceptions;
-using MVP.Data.Models;
+using MVP.Services.Exceptions;
+using MVP.Services.DataModels;
 using MVP.Services;
 using MVP.Services.Repositories;
 using System;

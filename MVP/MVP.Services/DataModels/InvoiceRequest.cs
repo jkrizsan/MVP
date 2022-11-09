@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MVP.Data.Models
+namespace MVP.Services.DataModels
 {
     /// <summary>
     /// Dto class for Invoice Request

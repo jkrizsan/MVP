@@ -1,4 +1,4 @@
-﻿using MVP.Data.Models;
+﻿using MVP.Services.DataModels;
 using MVP.Services.Abstractions;
 
 namespace MVP.Services.Factories

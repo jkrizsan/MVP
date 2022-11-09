@@ -17,8 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MVP.API\MVP.API.csproj" />
-    <ProjectReference Include="..\MVP.Services\MVP.Services.csproj" />
+    <ProjectReference Include="..\MVP.Services\Services.csproj" />
   </ItemGroup>
 
 </Project>

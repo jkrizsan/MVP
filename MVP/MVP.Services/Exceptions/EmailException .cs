@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MVP.Data.Exceptions
+namespace MVP.Services.Exceptions
 {
     /// <summary>
     /// Email Exception

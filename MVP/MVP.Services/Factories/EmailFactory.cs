@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MVP.Data.Models;
+using MVP.Services.DataModels;
 using System;
 using System.Net.Mail;
 

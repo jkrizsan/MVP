@@ -1,4 +1,4 @@
-﻿using MVP.Data.Models;
+﻿using MVP.Services.DataModels;
 using System.Net.Mail;
 
 namespace MVP.Services.Factories

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MVP.Data.Models;
+using MVP.Services.DataModels;
 using MVP.Services.Factories;
 using NUnit.Framework;
 using System.Collections.Generic;

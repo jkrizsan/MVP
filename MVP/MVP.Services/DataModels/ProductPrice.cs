@@ -1,4 +1,4 @@
-﻿namespace MVP.Data.Models
+﻿namespace MVP.Services.DataModels
 {
     /// <summary>
     /// Dto class for Product Price

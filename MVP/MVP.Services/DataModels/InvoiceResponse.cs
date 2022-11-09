@@ -2,7 +2,7 @@
 using MVP.Data.Models;
 using System.Collections.Generic;
 
-namespace MVP.Data.Models
+namespace MVP.Services.DataModels
 {
     /// <summary>
     /// Dto class for Invoice Response

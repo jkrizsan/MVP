@@ -1,4 +1,4 @@
-﻿using MVP.Data.Models;
+﻿using MVP.Services.DataModels;
 
 namespace MVP.Services.Abstractions
 {
