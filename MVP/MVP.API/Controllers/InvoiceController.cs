@@ -38,13 +38,11 @@ namespace MVP.API.Controllers
             }
             catch(ValidationException ex)
             {
-                ModelState.AddModelError("Validation Error", ex.ErrorMessage);
-                return BadRequest(ModelState);
+                return BadRequest($"Validation error: {ex.ErrorMessage}");
             }
             catch (EmailException ex)
             {
-                ModelState.AddModelError("Email Error", ex.ErrorMessage);
-                return BadRequest(ModelState);
+                return Problem($"Email error: {ex.ErrorMessage}");
             }
             catch
             {
