@@ -1,13 +1,9 @@
-# MVP
+# MVP (Home Work)
 
-This is an Asp.Net Core endpoint for create order and invoice with data base first approach.
+This is an Asp.Net API for create invoices for the requested product items. 
 
-Projects:
+Use the code first DB approach.
 
-MVP.Data: Data layer, represent data structure that store in Database.
+JSON and HTML invoice formats are supported.
 
-MVP.Service: Service layer, handle the data acces
-
-MVP.Test: Test project, there are some unit and function tests for Controller layer and for the services
-
-MVP.API: The endpoint of api
+The Invoice can be send via email if the right property is set in the request.
