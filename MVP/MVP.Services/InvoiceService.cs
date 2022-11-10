@@ -17,16 +17,16 @@ namespace MVP.Services
 
         private readonly IEmailService _emailService;
 
-        private readonly IInvoiceBuilderFactory _invoiceBuilderServiceFactory;
+        private readonly IInvoiceBuilderFactory _invoiceBuilderFactory;
 
         public InvoiceService(
             IMessageFactory messageFactory,
             IEmailService emailService,
-            IInvoiceBuilderFactory invoiceBuilderServiceFactory)
+            IInvoiceBuilderFactory invoiceBuilderFactory)
         {
             _messageFactory = messageFactory;
             _emailService = emailService;
-            _invoiceBuilderServiceFactory = invoiceBuilderServiceFactory;
+            _invoiceBuilderFactory = invoiceBuilderFactory;
         }
 
         /// <inheritdoc />
@@ -37,10 +37,10 @@ namespace MVP.Services
             switch(response.InvoiceFormat)
             {
                 case InvoiceFormat.JSON:
-                    message.Builder = _invoiceBuilderServiceFactory.Create<JsonInvoiceBuilder>();
+                    message.Builder = _invoiceBuilderFactory.Create<JsonInvoiceBuilder>();
                     break;
                 case InvoiceFormat.HTML:
-                    message.Builder = _invoiceBuilderServiceFactory.Create<HtmlInvoiceBuilder>();
+                    message.Builder = _invoiceBuilderFactory.Create<HtmlInvoiceBuilder>();
                     break;
                 default:
                     throw new Exception("Unexpected invoice format!");
