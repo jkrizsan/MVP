@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "4fdba1d2-8b99-422a-9b1e-a25806864b0e",
+		"name": "Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "HTML",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"Country\": \"Finland\",\r\n\"INVOICEFORMAT\" : \"HTML\",\r\n\"SENDEMAIL\": false,\r\n\"EMAILADDRESS\": \"XYZ@ABC.COM\",\r\n\"PRODUCTS\":\r\n[\r\n    {\"NAME\": \"APPLE\", \"QUANTITY\":1}\r\n]\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44359/invoice",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"invoice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "JSON",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"Country\": \"Finland\",\r\n\"INVOICEFORMAT\" : \"JSON\",\r\n\"SENDEMAIL\": false,\r\n\"EMAILADDRESS\": \"XYZ@ABC.COM\",\r\n\"PRODUCTS\":\r\n[\r\n    {\"NAME\": \"APPLE\", \"QUANTITY\":1}\r\n]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44359/invoice",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"invoice"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
