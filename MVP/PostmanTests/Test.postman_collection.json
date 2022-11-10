@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8b812ef9-e50d-40e7-8c83-ee5dc24c1834",
+		"_postman_id": "7ed479b7-eb34-45e5-bfd0-bdaf7bb842eb",
 		"name": "Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -12,7 +12,12 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\"Country\": \"Finland\",\r\n\"INVOICEFORMAT\" : \"HTML\",\r\n\"SENDEMAIL\": false,\r\n\"EMAILADDRESS\": \"XYZ@ABC.COM\",\r\n\"PRODUCTS\":\r\n[\r\n    {\"NAME\": \"APPLE\", \"QUANTITY\":1}\r\n]\r\n}"
+					"raw": "{\r\n\"Country\": \"Finland\",\r\n\"INVOICEFORMAT\" : \"HTML\",\r\n\"SENDEMAIL\": false,\r\n\"EMAILADDRESS\": \"XYZ@ABC.COM\",\r\n\"PRODUCTS\":\r\n[\r\n    {\"NAME\": \"APPLE\", \"QUANTITY\":1}\r\n]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
 					"raw": "https://localhost:44359/invoice",
