@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using MVP.Services.Exceptions;
 using MVP.Services.DataModels;
 using MVP.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVP.API.Controllers
 {
-    [Route("[controller]")]
+    [Authorize]
+    [Route("api/[controller]")]
     [ApiController]
     public class InvoiceController : ControllerBase
     {
