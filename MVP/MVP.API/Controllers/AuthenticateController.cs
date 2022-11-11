@@ -80,10 +80,10 @@ namespace API.Controllers
 
             if (userExists != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
+                return StatusCode(StatusCodes.Status200OK,
                     new Response
                     { 
-                        Status = "Error",
+                        Status = "Done",
                         Message = "User already exists!"
                     });
             }

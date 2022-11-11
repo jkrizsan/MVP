@@ -1,10 +1,52 @@
 {
 	"info": {
-		"_postman_id": "e57bb8c9-f71f-40cc-835e-f4f9f58abcf1",
+		"_postman_id": "384e8335-99f2-4e40-881c-75ba2483834e",
 		"name": "Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Register Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"{{Username}}\",\r\n    \"email\":\"{{Email}}\",\r\n    \"password\":\"{{Password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/Authenticate/register",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"Authenticate",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "Login",
 			"event": [
