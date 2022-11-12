@@ -33,14 +33,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}:{{Port}}/api/Authenticate/register",
+					"raw": "{{URL}}:{{Port}}/api/{{Authenticate}}/register",
 					"host": [
 						"{{URL}}"
 					],
 					"port": "{{Port}}",
 					"path": [
 						"api",
-						"Authenticate",
+						"{{Authenticate}}",
 						"register"
 					]
 				}
@@ -78,14 +78,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}:{{Port}}/api/Authenticate/login",
+					"raw": "{{URL}}:{{Port}}/api/{{Authenticate}}/login",
 					"host": [
 						"{{URL}}"
 					],
 					"port": "{{Port}}",
 					"path": [
 						"api",
-						"Authenticate",
+						"{{Authenticate}}",
 						"login"
 					]
 				}
