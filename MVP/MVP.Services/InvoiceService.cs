@@ -30,7 +30,7 @@ namespace MVP.Services
         }
 
         /// <inheritdoc />
-        public string CreateInvoice(InvoiceResponse response)
+        public async Task<string> ManageInvoiceAsync(InvoiceResponse response)
         {
             Message message = _messageFactory.Create(response);
 
@@ -46,15 +46,18 @@ namespace MVP.Services
                     throw new Exception("Unexpected invoice format!");
             };
 
-            return message.Build();
+            string invoice = await message.BuildAsync();
+
+            await sendInvoiceViaEmailAsync(invoice, response);
+
+            return invoice;
         }
 
-        /// <inheritdoc />
-        public void SendInvoiceViaEmail(string invoice, InvoiceResponse invoiceResponse)
+        private async Task sendInvoiceViaEmailAsync(string invoice, InvoiceResponse invoiceResponse)
         {
             if (invoiceResponse.SendEmail)
             {
-                Task.Run(() => _emailService.SendMail(invoice, invoiceResponse.EmailAddress));
+                await Task.Run(() => _emailService.SendMail(invoice, invoiceResponse.EmailAddress));
             }
         }
     }

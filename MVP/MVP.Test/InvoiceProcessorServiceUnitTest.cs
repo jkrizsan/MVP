@@ -7,6 +7,7 @@ using MVP.Services.DataModels;
 using MVP.Services.Repositories;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MVP.Test
 {
@@ -31,7 +32,7 @@ namespace MVP.Test
         }
 
         [Test]
-        public void CheckAndParseInvoice_GoodData_OK()
+        public async Task CheckAndParseInvoice_GoodData_OK()
         {
             var request = new InvoiceRequest()
             {
@@ -45,7 +46,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            var response = _invoiceProcessorServic.ValidateAndMapInvoice(request);
+            var response = await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request);
 
             Assert.AreEqual(response.TotalPrices, 254);
             Assert.AreEqual(response.TotalTaxes, 54);
@@ -66,7 +67,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), $"Error: {request.Country} country does not supported!");
+            Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request), $"Error: {request.Country} country does not supported!");
         }
 
         [Test]
@@ -84,7 +85,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), $"Error: {request.Products[0].Name} product does not supported!");
+            Assert.ThrowsAsync<ValidationException>(async () =>  await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request), $"Error: {request.Products[0].Name} product does not supported!");
         }
 
         [Test]
@@ -98,7 +99,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), "Error: Please give one or more products!");
+            Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request), "Error: Please give one or more products!");
         }
 
         [Test]
@@ -115,7 +116,7 @@ namespace MVP.Test
                 SendEmail = true
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), "Email Address is invalid!");
+            Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request), "Email Address is invalid!");
         }
 
         [Test]
@@ -133,7 +134,7 @@ namespace MVP.Test
                 EmailAddress = "something@something.com"
             };
 
-            Assert.Throws<ValidationException>(() => _invoiceProcessorServic.ValidateAndMapInvoice(request), $"InvoiceFormat is invalid!");
+            Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request), $"InvoiceFormat is invalid!");
         }
     }
 }

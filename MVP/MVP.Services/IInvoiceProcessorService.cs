@@ -1,4 +1,5 @@
 ﻿using MVP.Services.DataModels;
+using System.Threading.Tasks;
 
 namespace MVP.Services
 {
@@ -12,6 +13,6 @@ namespace MVP.Services
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-        InvoiceResponse ValidateAndMapInvoice(InvoiceRequest requestDto);
+        Task<InvoiceResponse> ValidateAndMapInvoiceAsync(InvoiceRequest requestDto);
     }
 }

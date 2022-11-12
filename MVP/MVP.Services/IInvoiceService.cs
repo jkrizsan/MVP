@@ -1,4 +1,5 @@
 ﻿using MVP.Services.DataModels;
+using System.Threading.Tasks;
 
 namespace MVP.Services
 {
@@ -8,18 +9,10 @@ namespace MVP.Services
     public interface IInvoiceService
     {
         /// <summary>
-        /// Create Invoice
+        /// Manage Invoice
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        string CreateInvoice(InvoiceResponse response);
-
-        /// <summary>
-        /// Send Invoice Via Email if needed
-        /// </summary>
-        /// <param name="invoice"></param>
-        /// <param name="invoiceResponse"></param>
-        /// <returns></returns>
-        void SendInvoiceViaEmail(string invoice, InvoiceResponse invoiceResponse);
+        Task<string> ManageInvoiceAsync(InvoiceResponse response);
     }
 }

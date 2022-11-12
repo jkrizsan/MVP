@@ -4,6 +4,7 @@ using MVP.Services.Exceptions;
 using MVP.Services.DataModels;
 using MVP.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace MVP.API.Controllers
 {
@@ -26,15 +27,13 @@ namespace MVP.API.Controllers
 
         // POST: invoice
         [HttpPost]
-        public ActionResult Post([FromBody]InvoiceRequest request)
+        public async Task<IActionResult> Post([FromBody]InvoiceRequest request)
         {
             try
             {
-                InvoiceResponse invoiceResponse = _invoiceProcessorService.ValidateAndMapInvoice(request);
+                InvoiceResponse invoiceResponse = await _invoiceProcessorService.ValidateAndMapInvoiceAsync(request);
 
-                var response = _invoiceService.CreateInvoice(invoiceResponse);
-
-                _invoiceService.SendInvoiceViaEmail(response, invoiceResponse);
+                var response = await _invoiceService.ManageInvoiceAsync(invoiceResponse);
 
                 return Ok(response);
             }

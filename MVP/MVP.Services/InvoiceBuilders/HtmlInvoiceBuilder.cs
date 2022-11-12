@@ -1,6 +1,7 @@
 ﻿using MVP.Services.DataModels;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Services.InvoiceBuilders
 {
@@ -10,7 +11,7 @@ namespace Services.InvoiceBuilders
     public class HtmlInvoiceBuilder : IInvoiceBuilder
     {
         /// <inheritdoc />
-        public string Build(InvoiceResponse response)
+        public async Task<string> BuildAsync(InvoiceResponse response)
         {
             StringBuilder invoice = new StringBuilder(1000);
 
@@ -28,7 +29,7 @@ namespace Services.InvoiceBuilders
             invoice.Append($@"</thead>{Environment.NewLine}");
             invoice.Append($@"<tbody>{Environment.NewLine}");
 
-            AddProductPrices(invoice, response);
+            await AddProductPricesAsync(invoice, response);
 
             invoice.Append($@"</tbody>{Environment.NewLine}");
             invoice.Append($@"</table>{Environment.NewLine}");
@@ -58,10 +59,10 @@ namespace Services.InvoiceBuilders
             invoice.Append($@"</body>{Environment.NewLine}");
             invoice.Append($@"</html>{Environment.NewLine}");
 
-            return invoice.ToString();
+            return await Task.Run(() => invoice.ToString());
         }
 
-        private void AddProductPrices(StringBuilder invoice, InvoiceResponse response)
+        private async Task AddProductPricesAsync(StringBuilder invoice, InvoiceResponse response)
         {
             foreach (var productPrice in response.ProductPricess)
             {
@@ -72,6 +73,5 @@ namespace Services.InvoiceBuilders
                 invoice.Append($@"</tr>{Environment.NewLine}");
             }
         }
-
     }
 }

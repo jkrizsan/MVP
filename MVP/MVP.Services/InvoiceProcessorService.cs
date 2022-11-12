@@ -4,6 +4,7 @@ using MVP.Services.DataModels;
 using MVP.Services.Repositories;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MVP.Services
 {
@@ -24,27 +25,27 @@ namespace MVP.Services
         }
 
         /// <inheritdoc />
-        public InvoiceResponse ValidateAndMapInvoice(InvoiceRequest request)
+        public async Task<InvoiceResponse> ValidateAndMapInvoiceAsync(InvoiceRequest request)
         {
             var response = new InvoiceResponse();
 
-            MapSendEmail(request, response);
-            MapEmailAddress(request, response);
-            MapInvoiceFormat(request, response);
-            MapCountry(request, response);
-            MapProduct(request, response);
-            SetPrices(request, response);
-            SetTaxes(request, response);
+            await MapSendEmailAsync(request, response);
+            await MapEmailAddressAsync(request, response);
+            await MapInvoiceFormatAsync(request, response);
+            await MapCountryAsync(request, response);
+            await MapProductAsync(request, response);
+            await SetPricesAsync(request, response);
+            await SetTaxesAsync(request, response);
 
             return response;
         }
 
-        private void MapSendEmail(InvoiceRequest request, InvoiceResponse response)
+        private async Task MapSendEmailAsync(InvoiceRequest request, InvoiceResponse response)
         {
             response.SendEmail = request.SendEmail;
         }
 
-        private void MapEmailAddress(InvoiceRequest request, InvoiceResponse response)
+        private async Task MapEmailAddressAsync(InvoiceRequest request, InvoiceResponse response)
         {
             if (response.SendEmail && string.IsNullOrEmpty(request.EmailAddress))
             {
@@ -54,7 +55,7 @@ namespace MVP.Services
             response.EmailAddress = request.EmailAddress;
         }
 
-        private InvoiceResponse MapInvoiceFormat(InvoiceRequest request, InvoiceResponse response)
+        private async Task MapInvoiceFormatAsync(InvoiceRequest request, InvoiceResponse response)
         {
             if (request.InvoiceFormat == InvoiceFormat.Unknown)
             {
@@ -62,11 +63,9 @@ namespace MVP.Services
             }
 
             response.InvoiceFormat = request.InvoiceFormat;
-
-            return response;
         }
 
-        private void MapProduct(InvoiceRequest request, InvoiceResponse response)
+        private async Task MapProductAsync(InvoiceRequest request, InvoiceResponse response)
         {
             if (request.Products is null || request.Products.Count.Equals(0))
             {
@@ -92,7 +91,7 @@ namespace MVP.Services
             }
         }
 
-        private void MapCountry(InvoiceRequest request, InvoiceResponse response)
+        private async Task MapCountryAsync(InvoiceRequest request, InvoiceResponse response)
         {
             var country = _countryRepository.GetByName(request.Country);
 
@@ -104,12 +103,12 @@ namespace MVP.Services
             response.Country = country;
         }
 
-        private void SetPrices(InvoiceRequest request, InvoiceResponse response)
+        private async Task SetPricesAsync(InvoiceRequest request, InvoiceResponse response)
         {
             response.TotalPrices = Math.Round(response.ProductPricess.Select(x => x.Price).ToList().Sum(), 2);
         }
 
-        private void SetTaxes(InvoiceRequest request, InvoiceResponse response)
+        private async Task SetTaxesAsync(InvoiceRequest request, InvoiceResponse response)
         {
             response.TotalTaxes = Math.Round(response.ProductPricess.Select(x => x.Tax).ToList().Sum(), 2);
         }

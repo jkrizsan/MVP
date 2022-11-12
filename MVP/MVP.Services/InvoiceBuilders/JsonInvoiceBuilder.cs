@@ -1,6 +1,7 @@
 ﻿using MVP.Services.DataModels;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Services.InvoiceBuilders
 {
@@ -10,7 +11,7 @@ namespace Services.InvoiceBuilders
     public class JsonInvoiceBuilder : IInvoiceBuilder
     {
         /// <inheritdoc />
-        public string Build(InvoiceResponse response)
+        public async Task<string> BuildAsync(InvoiceResponse response)
         {
             string result = string.Empty;
 

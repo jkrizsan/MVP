@@ -95,7 +95,7 @@ namespace API.Controllers
                 UserName = model.Username
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {

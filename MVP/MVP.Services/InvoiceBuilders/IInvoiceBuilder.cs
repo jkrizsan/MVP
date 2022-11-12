@@ -1,4 +1,5 @@
 ﻿using MVP.Services.DataModels;
+using System.Threading.Tasks;
 
 namespace Services.InvoiceBuilders
 {
@@ -12,6 +13,6 @@ namespace Services.InvoiceBuilders
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        string Build(InvoiceResponse response);
+        Task<string> BuildAsync(InvoiceResponse response);
     }
 }

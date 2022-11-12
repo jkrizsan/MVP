@@ -9,6 +9,7 @@ using NUnit.Framework;
 using Services.InvoiceBuilders;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MVP.Test
 {
@@ -37,7 +38,7 @@ namespace MVP.Test
         }
  
         [Test]
-        public void CreateInvoice_JsonInvocieBuilder_Ok()
+        public async Task CreateInvoice_JsonInvocieBuilder_Ok()
         {
             string testString = "JSON";
 
@@ -51,13 +52,13 @@ namespace MVP.Test
 
             SetupInvoiceService();
 
-            string resp = _invoiceService.CreateInvoice(response);
+            string resp = await _invoiceService.ManageInvoiceAsync(response);
 
             Assert.IsTrue(resp.Contains(testString));
         }
 
         [Test]
-        public void CreateInvoice_HtmlInvocieBuilder_Ok()
+        public async Task CreateInvoice_HtmlInvocieBuilder_Ok()
         {
             string testString = "HTML";
 
@@ -71,7 +72,7 @@ namespace MVP.Test
 
             SetupInvoiceService();
 
-            string resp = _invoiceService.CreateInvoice(response);
+            string resp = await _invoiceService.ManageInvoiceAsync(response);
 
             Assert.IsTrue(resp.Contains(testString));
         }
@@ -91,13 +92,13 @@ namespace MVP.Test
 
             SetupInvoiceService();
 
-            Assert.Throws<Exception>(() => _invoiceService.CreateInvoice(response), "Unexpected invoice format!");
+            Assert.ThrowsAsync<Exception>(async () => await _invoiceService.ManageInvoiceAsync(response), "Unexpected invoice format!");
         }
 
         private void SetupMessageFactory(InvoiceResponse response, string testString)
         {
             var mockInvoiceMessage = new Mock<InvoiceMessage>(response);
-            mockInvoiceMessage.Setup(x => x.Build()).Returns(testString);
+            mockInvoiceMessage.Setup(x => x.BuildAsync()).ReturnsAsync(testString);
 
             _messageFactoryMock = new Mock<IMessageFactory>();
             _messageFactoryMock.Setup(x => x.Create(response)).Returns(mockInvoiceMessage.Object);

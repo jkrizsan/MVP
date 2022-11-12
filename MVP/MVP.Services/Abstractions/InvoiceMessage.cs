@@ -1,4 +1,5 @@
 ﻿using MVP.Services.DataModels;
+using System.Threading.Tasks;
 
 namespace MVP.Services.Abstractions
 {
@@ -11,9 +12,9 @@ namespace MVP.Services.Abstractions
         {}
 
         /// <inheritdoc />
-        public override string Build()
+        public override async Task<string> BuildAsync()
         {
-            return Builder.Build(InvoiceData);
+            return await Builder.BuildAsync(InvoiceData);
         }
     }
 }

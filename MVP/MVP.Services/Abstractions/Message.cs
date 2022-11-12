@@ -1,5 +1,6 @@
 ﻿using MVP.Services.DataModels;
 using Services.InvoiceBuilders;
+using System.Threading.Tasks;
 
 namespace MVP.Services.Abstractions
 {
@@ -22,7 +23,7 @@ namespace MVP.Services.Abstractions
         /// Call the builder method
         /// </summary>
         /// <returns></returns>
-        public abstract string Build();
+        public abstract Task<string> BuildAsync();
 
         public Message(InvoiceResponse invoiceData)
         {
