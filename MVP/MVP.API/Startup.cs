@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +29,40 @@ namespace MVP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            registerServices(services);
+            registerDB(services);
+            registerAuth(services);
+            registerSwagger(services);
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MVP API V1");
+            });
+        }
+
+        private void registerServices(IServiceCollection services)
+        {
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IInvoiceService, InvoiceService>();
@@ -39,7 +72,11 @@ namespace MVP.API
             services.AddScoped<IInvoiceBuilderFactory, InvoiceBuilderFactory>();
             services.AddScoped<IInvoiceProcessorService, InvoiceProcessorService>();
 
-            var options = new DbContextOptionsBuilder<MVPContext>().Options;
+            services.AddControllers().AddNewtonsoftJson();
+        }
+
+        private void registerDB(IServiceCollection services)
+        {
             services.AddDbContext<MVPContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
@@ -47,7 +84,10 @@ namespace MVP.API
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<MVPContext>()
                 .AddDefaultTokenProviders();
+        }
 
+        private void registerAuth(IServiceCollection services)
+        {
             // Adding Authentication  
             services.AddAuthentication(options =>
             {
@@ -70,8 +110,11 @@ namespace MVP.API
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                 };
             });
+        }
 
-                services.AddSwaggerGen(opt =>
+        private void registerSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(opt =>
             {
                 opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MVP", Version = "v1" });
 
@@ -99,34 +142,6 @@ namespace MVP.API
                         new string[]{}
                     }
                 });
-            });
-
-            services.AddControllers().AddNewtonsoftJson();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MVP API V1");
             });
         }
     }
