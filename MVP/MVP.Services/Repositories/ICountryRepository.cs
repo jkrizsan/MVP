@@ -1,4 +1,5 @@
 ﻿using MVP.Data.Models;
+using System.Threading.Tasks;
 
 namespace MVP.Services.Repositories
 {
@@ -12,32 +13,32 @@ namespace MVP.Services.Repositories
         /// </summary>
         /// <param name="country"></param>
         /// <returns></returns>
-        bool Add(Country country);
+        Task<bool> AddAsync(Country country);
 
         /// <summary>
         /// Get a Country by Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Country</returns>
-        Country GetById(int id);
+        Task<Country> GetByIdAsync(int id);
 
         /// <summary>
         /// Get a Country by Name
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Country</returns>
-        Country GetByName(string name);
+        Task<Country> GetByNameAsync(string name);
 
         /// <summary>
         /// Delete a Country
         /// </summary>
         /// <param name="country"></param>
-        void Delete(Country country);
+        Task DeleteAsync(Country country);
 
         /// <summary>
         /// Remove a Country By Name
         /// </summary>
         /// <param name="id"></param>
-        void DeleteById(int id);
+        Task DeleteByIdAsync(int id);
     }
 }

@@ -74,7 +74,7 @@ namespace MVP.Services
 
             foreach (var prod in request.Products)
             {
-                var prodFromDb = _productRepository.GetByName(prod.Name);
+                var prodFromDb = await _productRepository.GetByNameAsync(prod.Name);
                 if (prodFromDb is null)
                 {
                     throw new ValidationException($"The '{prod.Name}' product does not supported!");
@@ -93,7 +93,7 @@ namespace MVP.Services
 
         private async Task MapCountryAsync(InvoiceRequest request, InvoiceResponse response)
         {
-            var country = _countryRepository.GetByName(request.Country);
+            var country = await _countryRepository.GetByNameAsync(request.Country);
 
             if (country is null)
             {

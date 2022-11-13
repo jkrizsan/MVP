@@ -1,4 +1,5 @@
 ﻿using MVP.Data.Models;
+using System.Threading.Tasks;
 
 namespace MVP.Services.Repositories
 {
@@ -12,32 +13,32 @@ namespace MVP.Services.Repositories
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
-        bool Add(Product product);
+        Task<bool> AddAsync(Product product);
 
         /// <summary>
         /// Get Product by Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Product</returns>
-        Product GetById(int id);
+        Task<Product> GetByIdAsync(int id);
 
         /// <summary>
         /// Get Product by Name
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Product</returns>
-        Product GetByName(string name);
+        Task<Product> GetByNameAsync(string name);
 
         /// <summary>
         /// Delete Product
         /// </summary>
         /// <param name="product"></param>
-        void Delete(Product product);
+        Task DeleteAsync(Product product);
 
         /// <summary>
         /// Remove Product by Id
         /// </summary>
         /// <param name="id"></param>
-        void DeleteById(int id);
+        Task DeleteByIdAsync(int id);
     }
 }

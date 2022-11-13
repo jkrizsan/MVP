@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MVP.Data;
 using MVP.Data.Models;
 
@@ -18,23 +20,23 @@ namespace MVP.Services.Repositories
         }
 
         /// <inheritdoc />
-        public Product GetById(int id)
+        public async Task<Product> GetByIdAsync(int id)
         {
-            return _context.Products
+            return await _context.Products
                 .Where(p => p.Id.Equals(id))
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
         }
 
         /// <inheritdoc />
-        public Product GetByName(string name)
+        public async Task<Product> GetByNameAsync(string name)
         {
-            return _context.Products
+            return await _context.Products
                 .Where(p => p.Name.Equals(name))
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
         }
 
         /// <inheritdoc />
-        public void Delete(Product product)
+        public async Task DeleteAsync(Product product)
         {
             if (product is null)
             {
@@ -42,25 +44,26 @@ namespace MVP.Services.Repositories
             }
 
             _context.Products.Remove(product);
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
         }
 
         /// <inheritdoc />
-        public void DeleteById(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            var product = GetById(id);
-            Delete(product);
+            var product = await GetByIdAsync(id);
+            await DeleteAsync(product);
         }
 
         /// <inheritdoc />
-        public bool Add(Product product)
+        public async Task<bool> AddAsync(Product product)
         {
             if (product is null)
             {
                 throw new ArgumentNullException(nameof(product));
             }
 
-            var prod = GetByName(product.Name);
+            var prod = await GetByNameAsync(product.Name);
 
             if (prod != null)
             {
@@ -68,7 +71,8 @@ namespace MVP.Services.Repositories
             }
 
             _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
             return true;
         }
     }

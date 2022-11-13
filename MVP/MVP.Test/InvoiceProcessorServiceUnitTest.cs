@@ -23,10 +23,10 @@ namespace MVP.Test
         public void Setup()
         {
             _countryRepositoryMock = new Mock<ICountryRepository>();
-            _countryRepositoryMock.Setup(x => x.GetByName("Hungary")).Returns(new Country() { Name = "Hungary", Tax = 27 });
+            _countryRepositoryMock.Setup(x => x.GetByNameAsync("Hungary")).ReturnsAsync(new Country() { Name = "Hungary", Tax = 27 });
 
             _productRepositoryMock = new Mock<IProductRepository>();
-            _productRepositoryMock.Setup(x => x.GetByName("Apple")).Returns(new Product() { Name = "Apple", Price = 100 });
+            _productRepositoryMock.Setup(x => x.GetByNameAsync("Apple")).ReturnsAsync(new Product() { Name = "Apple", Price = 100 });
 
             _invoiceProcessorServic = new InvoiceProcessorService(_countryRepositoryMock.Object, _productRepositoryMock.Object);
         }
