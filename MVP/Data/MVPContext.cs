@@ -16,6 +16,8 @@ namespace Data
 
         public DbSet<ApplicationUser> Users { get; set; }
 
+        public DbSet<Invoice> Invoices { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
