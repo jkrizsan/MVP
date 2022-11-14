@@ -1,18 +1,10 @@
-﻿
-using System;
-
-namespace Data.Models
+﻿namespace Services.DataModels
 {
     /// <summary>
-    /// Product
+    /// Dto class for Product Price
     /// </summary>
-    public class Product
+    public class ProductPrice
     {
-        /// <summary>
-        /// Primery Key
-        /// </summary>
-        public Guid Id { get; set; }
-
         /// <summary>
         /// Product Name
         /// </summary>
@@ -23,9 +15,9 @@ namespace Data.Models
         /// </summary>
         public double Price { get; set; }
 
-        public Product()
-        {
-            Id = Guid.NewGuid();
-        }
+        /// <summary>
+        /// Tax on the product
+        /// </summary>
+        public double Tax { get; set; }
     }
 }

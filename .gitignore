@@ -87,3 +87,14 @@ MVP/.vs/MVP/v17/.su
 /MVP/MVP.API/bin/Debug/net5
 /MVP/MVP.Services/bin/Debug/net5
 /MVP/MVP.Test/bin/Debug/net5
+/MVP/API/bin/Debug
+/MVP/API/obj/Debug/net5
+/MVP/API/obj
+/MVP/Services/bin/Debug/net5
+/MVP/Services/obj
+/MVP/Test/bin/Debug/net5
+/MVP/Test/obj
+/MVP/API/bin/Release/net5
+/MVP/Data/bin/Release/net5
+/MVP/Services/bin/Release/net5
+/MVP/Test/bin/Release/net5

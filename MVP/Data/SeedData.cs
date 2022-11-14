@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MVP.Data.Models;
+using Data.Models;
 
-namespace MVP.Data
+namespace Data
 {
     internal class SeedData
     {

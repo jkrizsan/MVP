@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MVP.Data.Models;
+using Data.Models;
 
-namespace MVP.Data
+namespace Data
 {
     public class MVPContext : IdentityDbContext<IdentityUser>
     {

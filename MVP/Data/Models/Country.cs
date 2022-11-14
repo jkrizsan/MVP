@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MVP.Data.Models
+namespace Data.Models
 {
     /// <summary>
     /// Country
