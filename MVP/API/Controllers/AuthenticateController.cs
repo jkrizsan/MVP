@@ -92,9 +92,11 @@ namespace API.Controllers
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
+                UserName = model.Username,
+                
             };
 
+            
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
@@ -107,6 +109,28 @@ namespace API.Controllers
                     });
             }
 
+            result = await _userManager.AddToRoleAsync(user, UserRoles.User);
+
+            if (!result.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Response
+                    {
+                        Status = "Error",
+                        Message = $"User add to the {UserRoles.User} role failed! Please check user details and try again."
+                    });
+            }
+
+            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+            }
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.User))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.User);
+            }
+
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
@@ -116,7 +140,14 @@ namespace API.Controllers
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+            {
+                return StatusCode(StatusCodes.Status200OK,
+                    new Response
+                    {
+                        Status = "Done",
+                        Message = "User already exists!"
+                    });
+            }
 
             ApplicationUser user = new ApplicationUser()
             {

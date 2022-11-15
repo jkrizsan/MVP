@@ -1,4 +1,7 @@
-﻿using Services.DataModels;
+﻿using Data.Models;
+using Services.DataModels;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services
@@ -14,5 +17,12 @@ namespace Services
         /// <param name="response"></param>
         /// <returns></returns>
         Task<string> ManageInvoiceAsync(InvoiceResponse response);
+
+        /// <summary>
+        /// Receive a list of previously created invoices
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<List<HistoryResponse>> GetInvoicesAsync(HistoryRequest request);
     }
 }

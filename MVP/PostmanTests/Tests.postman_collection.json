@@ -1,0 +1,466 @@
+{
+	"info": {
+		"_postman_id": "889e2d53-ef42-4a04-a825-957cfd133dd8",
+		"name": "Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Register Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"{{Username}}\",\r\n    \"email\":\"{{Email}}\",\r\n    \"password\":\"{{Password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Authenticate}}/register",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Authenticate}}",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Admin Register Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"{{Admin}}\",\r\n    \"email\":\"{{Email}}\",\r\n    \"password\":\"{{AdminPassword}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Authenticate}}/register-admin",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Authenticate}}",
+						"register-admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"\r",
+							"  var res = pm.response.json();\r",
+							"  pm.environment.set(\"Token\", res.token);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"{{Username}}\",\r\n    \"password\":\"{{Password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Authenticate}}/login",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Authenticate}}",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Admin Login Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"\r",
+							"  var res = pm.response.json();\r",
+							"  pm.environment.set(\"AdminToken\", res.token);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"{{Admin}}\",\r\n    \"password\":\"{{AdminPassword}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Authenticate}}/login",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Authenticate}}",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HTML",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is HTML\", function () {\r",
+							"  pm.expect(pm.response.text()).to.include(\"<!DOCTYPE html>\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"Country\": \"Finland\",\r\n\"INVOICEFORMAT\" : \"HTML\",\r\n\"SENDEMAIL\": false,\r\n\"EMAILADDRESS\": \"XYZ@ABC.COM\",\r\n\"PRODUCTS\":\r\n[\r\n    {\"NAME\": \"APPLE\", \"QUANTITY\":1}\r\n]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Controller}}",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Controller}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "JSON",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is JSON\", function () {\r",
+							"  pm.response.to.have.jsonBody();\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"Country\": \"Finland\",\r\n\"INVOICEFORMAT\" : \"JSON\",\r\n\"SENDEMAIL\": false,\r\n\"EMAILADDRESS\": \"XYZ@ABC.COM\",\r\n\"PRODUCTS\":\r\n[\r\n    {\"NAME\": \"APPLE\", \"QUANTITY\":1}\r\n]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Controller}}",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Controller}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request Without Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"  pm.response.to.have.status(401);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"Country\": \"Finland\",\r\n\"INVOICEFORMAT\" : \"JSON\",\r\n\"SENDEMAIL\": false,\r\n\"EMAILADDRESS\": \"XYZ@ABC.COM\",\r\n\"PRODUCTS\":\r\n[\r\n    {\"NAME\": \"APPLE\", \"QUANTITY\":1}\r\n]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Controller}}",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Controller}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment = require('moment');\r",
+							"\r",
+							"pm.environment.set('StartDate', moment().add(-10, 'minutes').format((\"yyyy-MM-DD HH:mm:ss\")));\r",
+							"pm.environment.set('EndDate', moment().add(10, 'minutes').format((\"yyyy-MM-DD HH:mm:ss\")));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AdminToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"Start\" : \"{{StartDate}}\",\r\n\"End\" : \"{{EndDate}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Controller}}",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Controller}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "History Without Admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"  pm.response.to.have.status(403);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"Start\" : \"{{StartDate}}\",\r\n\"End\" : \"{{EndDate}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}:{{Port}}/api/{{Controller}}",
+					"host": [
+						"{{URL}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"api",
+						"{{Controller}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

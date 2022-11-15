@@ -5,6 +5,8 @@ using Services.DataModels;
 using Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
+using System;
+using Data.Authentication;
 
 namespace API.Controllers
 {
@@ -25,7 +27,29 @@ namespace API.Controllers
             _invoiceProcessorService = invoiceProcessorService;
         }
 
+        // GET
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpGet]
+        public async Task<IActionResult> Get([FromBody] HistoryRequest request)
+        {
+            try
+            {
+                var invoiceResponse = await _invoiceService.GetInvoicesAsync(request);
+
+                return Ok(invoiceResponse);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest($"Validation error: {ex.ErrorMessage}");
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+            }
+        }
+
         // POST: invoice
+        [Authorize(Roles = UserRoles.User)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]InvoiceRequest request)
         {
@@ -50,5 +74,6 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
             }
         }
+
     }
 }

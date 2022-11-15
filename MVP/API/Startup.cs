@@ -14,6 +14,7 @@ using Services;
 using Services.Factories;
 using Services.Repositories;
 using System.Text;
+using Services.Mappers;
 
 namespace API
 {
@@ -65,12 +66,17 @@ namespace API
         {
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
-            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IEmailFactory, EmailFactory>();
             services.AddScoped<IMessageFactory, InvoiceMessageFactory>();
             services.AddScoped<IInvoiceBuilderFactory, InvoiceBuilderFactory>();
             services.AddScoped<IInvoiceProcessorService, InvoiceProcessorService>();
+            services.AddScoped<IMessageFactory, InvoiceMessageFactory>();
+            services.AddScoped<IInvoiceCreatorService, InvoiceCreatorService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+
+            services.AddAutoMapper(typeof(MVPProfile));
 
             services.AddControllers().AddNewtonsoftJson();
         }

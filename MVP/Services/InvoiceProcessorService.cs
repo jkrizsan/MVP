@@ -27,6 +27,11 @@ namespace Services
         /// <inheritdoc />
         public async Task<InvoiceResponse> ValidateAndMapInvoiceAsync(InvoiceRequest request)
         {
+            if (request is null)
+            {
+                throw new NullReferenceException($"The '{nameof(request)}' is null");
+            }
+
             var response = new InvoiceResponse();
 
             await MapSendEmailAsync(request, response);
@@ -42,12 +47,13 @@ namespace Services
 
         private async Task MapSendEmailAsync(InvoiceRequest request, InvoiceResponse response)
         {
-            response.SendEmail = request.SendEmail;
+            response.SendEmail = request?.SendEmail ?? false;
         }
 
         private async Task MapEmailAddressAsync(InvoiceRequest request, InvoiceResponse response)
         {
-            if (response.SendEmail && string.IsNullOrEmpty(request.EmailAddress))
+            if (response.SendEmail && string.IsNullOrEmpty(request.EmailAddress)
+                || request.EmailAddress?.Contains('@') == false)
             {
                 throw new ValidationException("Email Address is invalid!");
             }

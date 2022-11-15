@@ -1,12 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Data.Authentication;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Data
 {
     internal class SeedData
     {
+       
         public static void Initialize(ModelBuilder modelBuilder)
         {
+
+
+            //modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
+            //{
+            //    Name = UserRoles.User,
+            //    NormalizedName = UserRoles.User.ToUpperInvariant(),
+            //});
+
+            //modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
+            //{
+            //    Name = UserRoles.Admin,
+            //    NormalizedName = UserRoles.Admin.ToUpperInvariant(),
+            //});
+
             modelBuilder.Entity<Product>()
               .HasData(
                 new Product() { Name = "Apple", Price = 100 },

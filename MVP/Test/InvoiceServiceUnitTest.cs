@@ -10,6 +10,10 @@ using Services.InvoiceBuilders;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Services.Repositories;
+using System.Globalization;
+using Services.Exceptions;
+using AutoMapper;
 
 namespace Test
 {
@@ -19,14 +23,32 @@ namespace Test
 
         private Mock<IMessageFactory> _messageFactoryMock;
 
-        private Mock<IEmailService> _emailServiceMock;
+        private Mock<IInvoiceCreatorService> _invoiceCreatorServiceMock;
+
+        private Mock<IMapper> _mapperMock;
+
+        private Mock<IInvoiceRepository> _invoiceRepositoryMock;
 
         private Mock<IInvoiceBuilderFactory> _invoiceBuilderFactoryMock;
+
+        private DateTime _dateTime;
 
         [SetUp]
         public void Setup()
         {
-            _emailServiceMock = new Mock<IEmailService>();
+             _dateTime = DateTime.Now;
+
+             IEnumerable<Invoice> rawInvoices = new List<Invoice>();
+
+            _invoiceCreatorServiceMock = new Mock<IInvoiceCreatorService>();
+
+            _mapperMock = new Mock<IMapper>();
+            _mapperMock.Setup(x => x.Map<IEnumerable<Invoice>, List<HistoryResponse>>(rawInvoices))
+                .Returns(new List<HistoryResponse>() { new HistoryResponse() });
+
+            _invoiceRepositoryMock = new Mock<IInvoiceRepository>();
+            _invoiceRepositoryMock.Setup(x => x.GetInvoicesAsync(_dateTime, _dateTime.AddDays(1), 0, 1))
+                .ReturnsAsync(new List<Invoice>());
 
             _messageFactoryMock = new Mock<IMessageFactory>();
             _messageFactoryMock.Setup(x => x.Create(new InvoiceResponse())).Returns(new InvoiceMessage(new InvoiceResponse()));
@@ -34,101 +56,142 @@ namespace Test
             _invoiceBuilderFactoryMock = new Mock<IInvoiceBuilderFactory>();
             _invoiceBuilderFactoryMock.Setup(x => x.Create<JsonInvoiceBuilder>()).Returns(new JsonInvoiceBuilder());
 
-            SetupInvoiceService();
-        }
- 
-        [Test]
-        public async Task CreateInvoice_JsonInvocieBuilder_Ok()
-        {
-            string testString = "JSON";
-
-            InvoiceResponse response = CreateInvoiceResponse(InvoiceFormat.JSON);
-
-            SetupMessageFactory(response, testString);
-
-            _invoiceBuilderFactoryMock = new Mock<IInvoiceBuilderFactory>();
-            _invoiceBuilderFactoryMock.Setup(x => x.Create<JsonInvoiceBuilder>())
-                .Returns(new JsonInvoiceBuilder());
-
-            SetupInvoiceService();
-
-            string resp = await _invoiceService.ManageInvoiceAsync(response);
-
-            Assert.IsTrue(resp.Contains(testString));
+            SetupInvoiceCreatorService();
         }
 
         [Test]
-        public async Task CreateInvoice_HtmlInvocieBuilder_Ok()
+        public async Task GetInvoicesAsync_GoodRequestWithUnknownInvoiceFormat_Ok()
         {
-            string testString = "HTML";
-
-            InvoiceResponse response = CreateInvoiceResponse(InvoiceFormat.HTML);
-
-            SetupMessageFactory(response, testString);
-
-            _invoiceBuilderFactoryMock = new Mock<IInvoiceBuilderFactory>();
-            _invoiceBuilderFactoryMock.Setup(x => x.Create<HtmlInvoiceBuilder>())
-                .Returns(new HtmlInvoiceBuilder());
-
-            SetupInvoiceService();
-
-            string resp = await _invoiceService.ManageInvoiceAsync(response);
-
-            Assert.IsTrue(resp.Contains(testString));
-        }
-
-        [Test]
-        public void CreateInvoice_UnknownInvocieBuilder_Error()
-        {
-            string testString = "Unknown";
-
-            InvoiceResponse response = CreateInvoiceResponse(InvoiceFormat.Unknown);
-
-            SetupMessageFactory(response, testString);
-
-            _invoiceBuilderFactoryMock = new Mock<IInvoiceBuilderFactory>();
-            _invoiceBuilderFactoryMock.Setup(x => x.Create<HtmlInvoiceBuilder>())
-                .Returns(new HtmlInvoiceBuilder());
-
-            SetupInvoiceService();
-
-            Assert.ThrowsAsync<Exception>(async () => await _invoiceService.ManageInvoiceAsync(response), "Unexpected invoice format!");
-        }
-
-        private void SetupMessageFactory(InvoiceResponse response, string testString)
-        {
-            var mockInvoiceMessage = new Mock<InvoiceMessage>(response);
-            mockInvoiceMessage.Setup(x => x.BuildAsync()).ReturnsAsync(testString);
-
-            _messageFactoryMock = new Mock<IMessageFactory>();
-            _messageFactoryMock.Setup(x => x.Create(response)).Returns(mockInvoiceMessage.Object);
-        }
-
-        private void SetupInvoiceService()
-        {
-            _invoiceService = new InvoiceService(_messageFactoryMock.Object, _emailServiceMock.Object, _invoiceBuilderFactoryMock.Object);
-        }
-
-        private InvoiceResponse CreateInvoiceResponse(InvoiceFormat invoiceFormat)
-        {
-            return new InvoiceResponse()
+            HistoryRequest req = new HistoryRequest()
             {
-                InvoiceFormat = invoiceFormat,
-                Country = new Country() { Id = Guid.NewGuid(), Name = "Hungary", Tax = 27 },
-                SendEmail = true,
-                EmailAddress = "XYZ@ABC.COM",
-                TotalPrices = 124.0,
-                TotalTaxes = 24.0,
-                ProductPricess = new List<ProductPrice>()
-                {
-                    new ProductPrice()
-                    {
-                        Name = "Apple",
-                        Price = 124.0,
-                        Tax = 24.0
-                    }
-                }
+                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Skip = 0,
+                Take = 1,
+                InvoiceFormat = InvoiceFormat.Unknown
+            }; 
+
+            List<HistoryResponse> resp = await _invoiceService.GetInvoicesAsync(req);
+
+            Assert.IsTrue(resp.Count == 1); 
+        }
+
+        [Test]
+        public async Task GetInvoicesAsync_GoodRequestWithJSONInvoiceFormat_Ok()
+        {
+            HistoryRequest req = new HistoryRequest()
+            {
+                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Skip = 0,
+                Take = 1,
+                InvoiceFormat = InvoiceFormat.JSON
             };
+
+            List<HistoryResponse> resp = await _invoiceService.GetInvoicesAsync(req);
+
+            Assert.IsTrue(resp.Count == 1);
+        }
+
+        [Test]
+        public async Task GetInvoicesAsync_RequestParamIsNull_Error()
+        {
+            Exception ex = Assert.ThrowsAsync<NullReferenceException>(async ()
+                => await _invoiceService.GetInvoicesAsync(null));
+
+            Assert.That(ex.Message, Is.EqualTo("The 'request' is null"));
+        }
+
+        [Test]
+        public async Task GetInvoicesAsync_StartParamIsUnset_Error()
+        {
+            HistoryRequest req = new HistoryRequest()
+            {
+                End = _dateTime.AddDays(1).ToString(new CultureInfo("en-US")),
+                Skip = 0,
+                Take = 1
+            };
+
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async ()
+                => await _invoiceService.GetInvoicesAsync(req));
+
+            Assert.That(ex.ErrorMessage, Is.EqualTo($"The 'Start' value is invalid!"));
+        }
+
+        [Test]
+        public async Task GetInvoicesAsync_EndParamIsUnset_Error()
+        {
+            HistoryRequest req = new HistoryRequest()
+            {
+                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Skip = 0,
+                Take = 1
+            };
+
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async ()
+                => await _invoiceService.GetInvoicesAsync(req));
+
+            Assert.That(ex.ErrorMessage, Is.EqualTo($"The 'End' value is invalid!"));
+        }
+
+        [Test]
+        public async Task GetInvoicesAsync_EndIsEarlierThenStart_Error()
+        {
+            HistoryRequest req = new HistoryRequest()
+            {
+                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(-1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Skip = 0,
+                Take = 1
+            };
+
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async ()
+                => await _invoiceService.GetInvoicesAsync(req));
+
+            Assert.That(ex.ErrorMessage,
+                Is.EqualTo("The 'Start' value must be lower then 'End' value!"));
+        }
+
+        [Test]
+        public async Task GetInvoicesAsync_SkipIsNegative_Error()
+        {
+            HistoryRequest req = new HistoryRequest()
+            {
+                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Skip = -1,
+                Take = 1
+            };
+
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async ()
+                => await _invoiceService.GetInvoicesAsync(req));
+
+            Assert.That(ex.ErrorMessage,
+                Is.EqualTo("The 'Skip' must be 0 or greater!"));
+        }
+
+        [Test]
+        public async Task GetInvoicesAsync_TakeIsZero_Error()
+        {
+            HistoryRequest req = new HistoryRequest()
+            {
+                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Skip = 0,
+                Take = 0
+            };
+
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async ()
+                => await _invoiceService.GetInvoicesAsync(req));
+
+            Assert.That(ex.ErrorMessage,
+                Is.EqualTo("The 'Take' must be at least 1!"));
+        }
+
+        private void SetupInvoiceCreatorService()
+        {
+            _invoiceService = new InvoiceService(
+                _mapperMock.Object, _invoiceRepositoryMock.Object, _invoiceCreatorServiceMock.Object);
         }
     }
 }
