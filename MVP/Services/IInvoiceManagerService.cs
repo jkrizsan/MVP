@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 namespace Services
 {
     /// <summary>
-    /// Interface of the InvoiceCreator Service
+    /// Interface of the InvoiceManager Service
     /// </summary>
-    public interface IInvoiceCreatorService
+    public interface IInvoiceManagerService
     {
         /// <summary>
         /// Manage Invoice, Create the new invoice, Send it via Email if needed

@@ -73,7 +73,7 @@ namespace API
             services.AddScoped<IInvoiceBuilderFactory, InvoiceBuilderFactory>();
             services.AddScoped<IInvoiceProcessorService, InvoiceProcessorService>();
             services.AddScoped<IMessageFactory, InvoiceMessageFactory>();
-            services.AddScoped<IInvoiceCreatorService, InvoiceCreatorService>();
+            services.AddScoped<IInvoiceManagerService, InvoiceManagerService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
 
             services.AddAutoMapper(typeof(MVPProfile));

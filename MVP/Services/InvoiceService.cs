@@ -9,6 +9,7 @@ using Services.Exceptions;
 using System.Globalization;
 using AutoMapper;
 using System.Linq;
+using Data;
 
 namespace Services
 {
@@ -18,7 +19,7 @@ namespace Services
     public class InvoiceService : IInvoiceService
     {
 
-        private readonly IInvoiceCreatorService _invoiceCreatorService;
+        private readonly IInvoiceManagerService _invoiceCreatorService;
 
         private readonly IInvoiceRepository _invoiceRepository;
 
@@ -27,7 +28,7 @@ namespace Services
         public InvoiceService(
             IMapper mapper,
             IInvoiceRepository invoiceRepository,
-            IInvoiceCreatorService invoiceCreatorService)
+            IInvoiceManagerService invoiceCreatorService)
         {
             _mapper = mapper;
             _invoiceRepository = invoiceRepository;
@@ -39,7 +40,7 @@ namespace Services
         {
             if (request is null)
             {
-                throw new NullReferenceException($"The '{nameof(request)}' is null");
+                throw new NullReferenceException(Constants.GetString(Constants.NullreferenceException, nameof(request)));
             }
 
             DateTime start = await convertStringToDateTime(request.Start, nameof(request.Start));
@@ -48,17 +49,18 @@ namespace Services
 
             if (start > end)
             {
-                throw new ValidationException($"The '{nameof(request.Start)}' value must be lower then '{nameof(request.End)}' value!");
+                throw new ValidationException(Constants.GetString(Constants.TimelineValidation, nameof(request.Start),
+                    nameof(request.End)));
             }
 
             if (request.Skip < 0)
             {
-                throw new ValidationException($"The '{nameof(request.Skip)}' must be 0 or greater!");
+                throw new ValidationException(Constants.GetString(Constants.MustBePositive, nameof(request.Skip)));
             }
 
             if (request.Take < 1)
             {
-                throw new ValidationException($"The '{nameof(request.Take)}' must be at least 1!");
+                throw new ValidationException(Constants.GetString(Constants.MustBeAtLeastOne, nameof(request.Take)));
             }
 
             IEnumerable<Invoice> rawInvoices = await applyInvoiceFormatFilter(request, start, end);
@@ -95,11 +97,11 @@ namespace Services
         {
             try
             {
-                return DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                return DateTime.ParseExact(date, Constants.TimeFormat, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
-                throw new ValidationException($"The '{paramName}' value is invalid!");
+                throw new ValidationException(Constants.GetString(Constants.InvalidDate, paramName));
             }
         }
 

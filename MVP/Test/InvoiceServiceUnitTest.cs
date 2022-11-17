@@ -14,6 +14,7 @@ using Services.Repositories;
 using System.Globalization;
 using Services.Exceptions;
 using AutoMapper;
+using Data;
 
 namespace Test
 {
@@ -23,7 +24,7 @@ namespace Test
 
         private Mock<IMessageFactory> _messageFactoryMock;
 
-        private Mock<IInvoiceCreatorService> _invoiceCreatorServiceMock;
+        private Mock<IInvoiceManagerService> _invoiceCreatorServiceMock;
 
         private Mock<IMapper> _mapperMock;
 
@@ -40,7 +41,7 @@ namespace Test
 
              IEnumerable<Invoice> rawInvoices = new List<Invoice>();
 
-            _invoiceCreatorServiceMock = new Mock<IInvoiceCreatorService>();
+            _invoiceCreatorServiceMock = new Mock<IInvoiceManagerService>();
 
             _mapperMock = new Mock<IMapper>();
             _mapperMock.Setup(x => x.Map<IEnumerable<Invoice>, IEnumerable<HistoryResponse>>(rawInvoices))
@@ -64,8 +65,8 @@ namespace Test
         {
             HistoryRequest req = new HistoryRequest()
             {
-                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
-                End = _dateTime.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Start = _dateTime.ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(1).ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
                 Skip = 0,
                 Take = 1,
                 InvoiceFormat = InvoiceFormat.Unknown
@@ -81,8 +82,8 @@ namespace Test
         {
             HistoryRequest req = new HistoryRequest()
             {
-                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
-                End = _dateTime.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Start = _dateTime.ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(1).ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
                 Skip = 0,
                 Take = 1,
                 InvoiceFormat = InvoiceFormat.JSON
@@ -99,7 +100,8 @@ namespace Test
             Exception ex = Assert.ThrowsAsync<NullReferenceException>(async ()
                 => await _invoiceService.GetInvoicesAsync(null));
 
-            Assert.That(ex.Message, Is.EqualTo("The 'request' is null"));
+            Assert.That(ex.Message, Is.EqualTo(Constants.GetString(Constants.NullreferenceException, "request")));
+            Assert.That(ex.Message, Is.EqualTo(Constants.GetString(Constants.NullreferenceException, "request")));
         }
 
         [Test]
@@ -115,7 +117,7 @@ namespace Test
             ValidationException ex = Assert.ThrowsAsync<ValidationException>(async ()
                 => await _invoiceService.GetInvoicesAsync(req));
 
-            Assert.That(ex.ErrorMessage, Is.EqualTo($"The 'Start' value is invalid!"));
+            Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.GetString(Constants.InvalidDate, "Start")));
         }
 
         [Test]
@@ -123,7 +125,7 @@ namespace Test
         {
             HistoryRequest req = new HistoryRequest()
             {
-                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Start = _dateTime.ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
                 Skip = 0,
                 Take = 1
             };
@@ -131,7 +133,7 @@ namespace Test
             ValidationException ex = Assert.ThrowsAsync<ValidationException>(async ()
                 => await _invoiceService.GetInvoicesAsync(req));
 
-            Assert.That(ex.ErrorMessage, Is.EqualTo($"The 'End' value is invalid!"));
+            Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.GetString(Constants.InvalidDate, "End")));
         }
 
         [Test]
@@ -139,8 +141,8 @@ namespace Test
         {
             HistoryRequest req = new HistoryRequest()
             {
-                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
-                End = _dateTime.AddDays(-1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Start = _dateTime.ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(-1).ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
                 Skip = 0,
                 Take = 1
             };
@@ -149,7 +151,7 @@ namespace Test
                 => await _invoiceService.GetInvoicesAsync(req));
 
             Assert.That(ex.ErrorMessage,
-                Is.EqualTo("The 'Start' value must be lower then 'End' value!"));
+                Is.EqualTo(Constants.GetString(Constants.TimelineValidation, "Start", "End")));
         }
 
         [Test]
@@ -157,8 +159,8 @@ namespace Test
         {
             HistoryRequest req = new HistoryRequest()
             {
-                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
-                End = _dateTime.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Start = _dateTime.ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(1).ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
                 Skip = -1,
                 Take = 1
             };
@@ -167,7 +169,7 @@ namespace Test
                 => await _invoiceService.GetInvoicesAsync(req));
 
             Assert.That(ex.ErrorMessage,
-                Is.EqualTo("The 'Skip' must be 0 or greater!"));
+                Is.EqualTo(Constants.GetString(Constants.MustBePositive, "Skip")));
         }
 
         [Test]
@@ -175,8 +177,8 @@ namespace Test
         {
             HistoryRequest req = new HistoryRequest()
             {
-                Start = _dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
-                End = _dateTime.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
+                Start = _dateTime.ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
+                End = _dateTime.AddDays(1).ToString(Constants.TimeFormat, CultureInfo.InvariantCulture),
                 Skip = 0,
                 Take = 0
             };
@@ -185,7 +187,7 @@ namespace Test
                 => await _invoiceService.GetInvoicesAsync(req));
 
             Assert.That(ex.ErrorMessage,
-                Is.EqualTo("The 'Take' must be at least 1!"));
+                Is.EqualTo(Constants.GetString(Constants.MustBeAtLeastOne, "Take")));
         }
 
         private void SetupInvoiceCreatorService()

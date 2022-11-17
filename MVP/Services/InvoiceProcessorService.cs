@@ -5,6 +5,7 @@ using Services.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Data;
 
 namespace Services
 {
@@ -29,7 +30,7 @@ namespace Services
         {
             if (request is null)
             {
-                throw new NullReferenceException($"The '{nameof(request)}' is null");
+                throw new NullReferenceException(Constants.GetString(Constants.NullreferenceException, nameof(request)));
             }
 
             var response = new InvoiceResponse();
@@ -53,9 +54,9 @@ namespace Services
         private async Task MapEmailAddressAsync(InvoiceRequest request, InvoiceResponse response)
         {
             if (response.SendEmail && string.IsNullOrEmpty(request.EmailAddress)
-                || request.EmailAddress?.Contains('@') == false)
+                || request.EmailAddress?.Contains(Constants.At) == false)
             {
-                throw new ValidationException("Email Address is invalid!");
+                throw new ValidationException(Constants.EmailAddressError);
             }
 
             response.EmailAddress = request.EmailAddress;
@@ -65,7 +66,7 @@ namespace Services
         {
             if (request.InvoiceFormat == InvoiceFormat.Unknown)
             {
-                throw new ValidationException("InvoiceFormat is invalid!");
+                throw new ValidationException(Constants.InvalidInvoiceFormat);
             }
 
             response.InvoiceFormat = request.InvoiceFormat;
@@ -75,7 +76,7 @@ namespace Services
         {
             if (request.Products is null || request.Products.Count.Equals(0))
             {
-                throw new ValidationException("Please give one or more products!");
+                throw new ValidationException(Constants.MissingProduct);
             }
 
             foreach (var prod in request.Products)
@@ -83,7 +84,7 @@ namespace Services
                 var prodFromDb = await _productRepository.GetByNameAsync(prod.Name);
                 if (prodFromDb is null)
                 {
-                    throw new ValidationException($"The '{prod.Name}' product does not supported!");
+                    throw new ValidationException(Constants.GetString(Constants.UnsupportedProduct, prod.Name));
                 }
 
                 for (int i = 0; i < prod.Quantity; i++)
@@ -103,7 +104,7 @@ namespace Services
 
             if (country is null)
             {
-                throw new ValidationException($"The '{request.Country}' country does not supported!");
+                throw new ValidationException(Constants.GetString(Constants.UnsupportedCountry, request.Country));
             }
 
             response.Country = country;

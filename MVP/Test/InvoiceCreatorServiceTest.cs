@@ -1,4 +1,5 @@
-﻿using Data.Enums;
+﻿using Data;
+using Data.Enums;
 using Data.Models;
 using Moq;
 using NUnit.Framework;
@@ -24,7 +25,7 @@ namespace Tests
 
         private Mock<IInvoiceBuilderFactory> _invoiceBuilderFactoryMock;
 
-        private InvoiceCreatorService _invoiceCreatorService;
+        private InvoiceManagerService _invoiceManagerService;
 
         private DateTime _dateTime;
 
@@ -53,7 +54,7 @@ namespace Tests
         [Test]
         public async Task ManageInvoiceAsync_JsonInvocieBuilder_Ok()
         {
-            string testString = "JSON";
+            string testString = InvoiceFormat.JSON.ToString();
 
             InvoiceResponse response = CreateInvoiceResponse(InvoiceFormat.JSON);
 
@@ -65,7 +66,7 @@ namespace Tests
 
             SetupInvoiceCreatorService();
 
-            string resp = await _invoiceCreatorService.ManageInvoiceAsync(response);
+            string resp = await _invoiceManagerService.ManageInvoiceAsync(response);
 
             Assert.IsTrue(resp.Contains(testString));
         }
@@ -73,7 +74,7 @@ namespace Tests
         [Test]
         public async Task ManageInvoiceAsync_HtmlInvocieBuilder_Ok()
         {
-            string testString = "HTML";
+            string testString = InvoiceFormat.HTML.ToString();
 
             InvoiceResponse response = CreateInvoiceResponse(InvoiceFormat.HTML);
 
@@ -85,7 +86,7 @@ namespace Tests
 
             SetupInvoiceCreatorService();
 
-            string resp = await _invoiceCreatorService.ManageInvoiceAsync(response);
+            string resp = await _invoiceManagerService.ManageInvoiceAsync(response);
 
             Assert.IsTrue(resp.Contains(testString));
         }
@@ -93,7 +94,7 @@ namespace Tests
         [Test]
         public void ManageInvoiceAsync_UnknownInvocieBuilder_Error()
         {
-            string testString = "Unknown";
+            string testString = InvoiceFormat.Unknown.ToString();
 
             InvoiceResponse response = CreateInvoiceResponse(InvoiceFormat.Unknown);
 
@@ -105,16 +106,16 @@ namespace Tests
 
             SetupInvoiceCreatorService();
 
-            Exception ex = Assert.ThrowsAsync<Exception>(async () => await _invoiceCreatorService.ManageInvoiceAsync(response));
+            Exception ex = Assert.ThrowsAsync<Exception>(async () => await _invoiceManagerService.ManageInvoiceAsync(response));
 
-            Assert.That(ex.Message, Is.EqualTo("Unexpected invoice format!"));
+            Assert.That(ex.Message, Is.EqualTo(Constants.InvalidInvoiceFormat));
         }
 
         #endregion ManageInvoiceAsync
 
         private void SetupInvoiceCreatorService()
         {
-            _invoiceCreatorService = new InvoiceCreatorService(
+            _invoiceManagerService = new InvoiceManagerService(
                 _messageFactoryMock.Object, _emailServiceMock.Object, _invoiceRepositoryMock.Object, _invoiceBuilderFactoryMock.Object);
         }
 

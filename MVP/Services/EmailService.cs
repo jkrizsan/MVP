@@ -2,6 +2,7 @@
 using Services.DataModels;
 using Services.Factories;
 using System.Net.Mail;
+using Data;
 
 namespace Services
 {
@@ -29,7 +30,7 @@ namespace Services
             }
             catch
             {
-               throw new EmailException("Email sending is failed!");
+               throw new EmailException(Constants.EmailError);
             }
         }
     }

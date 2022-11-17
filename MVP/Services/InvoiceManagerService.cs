@@ -1,18 +1,16 @@
-﻿using Data.Enums;
+﻿using Data;
+using Data.Enums;
 using Services.Abstractions;
 using Services.DataModels;
 using Services.Factories;
 using Services.InvoiceBuilders;
 using Services.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Services
 {
-    public class InvoiceCreatorService : IInvoiceCreatorService
+    public class InvoiceManagerService : IInvoiceManagerService
     {
         private readonly IMessageFactory _messageFactory;
 
@@ -22,7 +20,7 @@ namespace Services
 
         private readonly IInvoiceBuilderFactory _invoiceBuilderFactory;
 
-        public InvoiceCreatorService(
+        public InvoiceManagerService(
             IMessageFactory messageFactory,
             IEmailService emailService,
             IInvoiceRepository invoiceRepository,
@@ -34,6 +32,7 @@ namespace Services
             _invoiceBuilderFactory = invoiceBuilderFactory;
         }
 
+        /// <inheritdoc />
         public async Task<string> ManageInvoiceAsync(InvoiceResponse response)
         {
             string invoice = await createInvoice(response);
@@ -60,7 +59,7 @@ namespace Services
                     message.Builder = _invoiceBuilderFactory.Create<HtmlInvoiceBuilder>();
                     break;
                 default:
-                    throw new Exception("Unexpected invoice format!");
+                    throw new Exception(Constants.InvalidInvoiceFormat);
             };
 
             return await message.BuildAsync();

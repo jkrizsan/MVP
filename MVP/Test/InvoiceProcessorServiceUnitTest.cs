@@ -9,6 +9,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Data;
 
 namespace Test
 {
@@ -59,37 +60,42 @@ namespace Test
             Exception ex = Assert.ThrowsAsync<NullReferenceException>(async ()
                 => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(null));
 
-            Assert.That(ex.Message, Is.EqualTo("The 'request' is null"));
+            Assert.That(ex.Message, Is.EqualTo(Constants.GetString(Constants.NullreferenceException, "request")));
         }
 
         [Test]
         public void ValidateAndMapInvoiceAsync_UnsupportedCountry_ValidationException()
         {
+            const string countryName = "Poland";
+
             var request = new InvoiceRequest()
             {
                 Products = new List<InvoiceProduct>()
                 {
                     new InvoiceProduct(){ Name = "Apple", Quantity = 2}
                 },
-                Country = "Poland",
+                Country = countryName,
                 InvoiceFormat = InvoiceFormat.JSON,
                 SendEmail = true,
                 EmailAddress = "something@something.com"
             };
 
-            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
+                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
 
-            Assert.That(ex.ErrorMessage, Is.EqualTo($"The '{request.Country}' country does not supported!"));
+            Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.GetString(Constants.UnsupportedCountry, countryName)));
         }
 
         [Test]
         public void ValidateAndMapInvoiceAsync_UnsupportedProduct_ValidationException()
         {
+            const string productName = "Car";
+
             var request = new InvoiceRequest()
             {
                 Products = new List<InvoiceProduct>()
                 {
-                    new InvoiceProduct(){ Name = "Car", Quantity = 2}
+                    new InvoiceProduct(){ Name = productName, Quantity = 2}
                 },
                 Country = "Hungary",
                 InvoiceFormat = InvoiceFormat.JSON,
@@ -97,9 +103,10 @@ namespace Test
                 EmailAddress = "something@something.com"
             };
 
-            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () =>  await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
+                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
 
-            Assert.That(ex.ErrorMessage, Is.EqualTo($"The '{request.Products[0].Name}' product does not supported!"));
+            Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.GetString(Constants.UnsupportedProduct, productName)));
         }
 
         [Test]
@@ -113,9 +120,10 @@ namespace Test
                 EmailAddress = "something@something.com"
             };
 
-            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
+                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
 
-            Assert.That(ex.ErrorMessage, Is.EqualTo("Please give one or more products!"));
+            Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.MissingProduct));
         }
 
         [Test]
@@ -132,13 +140,14 @@ namespace Test
                 SendEmail = true
             };
 
-            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
+                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
 
-            Assert.That(ex.ErrorMessage, Is.EqualTo("Email Address is invalid!"));
+            Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.EmailAddressError));
         }
 
         [Test]
-        public void ValidateAndMapInvoiceAsync_WithBadEmail_ValidationException()
+        public void ValidateAndMapInvoiceAsync_WithWrongEmailAddress_ValidationException()
         {
             var request = new InvoiceRequest()
             {
@@ -152,9 +161,10 @@ namespace Test
                 EmailAddress = "test"
             };
 
-            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
+                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
 
-            Assert.That(ex.ErrorMessage, Is.EqualTo("Email Address is invalid!"));
+            Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.EmailAddressError));
         }
 
         [Test]
@@ -172,9 +182,10 @@ namespace Test
                 EmailAddress = "something@something.com"
             };
 
-            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+            ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
+                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
 
-            Assert.That(ex.ErrorMessage, Is.EqualTo("InvoiceFormat is invalid!"));
+            Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.InvalidInvoiceFormat));
         }
     }
 }

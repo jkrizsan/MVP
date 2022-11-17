@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Data;
 
 namespace Services.InvoiceBuilders
 {
@@ -21,7 +22,7 @@ namespace Services.InvoiceBuilders
             }
             catch
             {
-                throw new ValidationException($"JSON Serialize error happened!");
+                throw new ValidationException(Constants.JsonSerializeError);
             }
 
             return result;
