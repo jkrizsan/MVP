@@ -61,6 +61,21 @@ namespace Services
                 throw new ValidationException($"The '{nameof(request.Take)}' must be at least 1!");
             }
 
+            IEnumerable<Invoice> rawInvoices = await applyInvoiceFormatFilter(request, start, end);
+
+            List<HistoryResponse> response = _mapper.Map<IEnumerable<Invoice>, IEnumerable<HistoryResponse>>(rawInvoices).ToList();
+
+            return response;
+        }
+
+        /// <inheritdoc />
+        public async Task<string> ManageInvoiceAsync(InvoiceResponse response)
+        {
+            return await _invoiceCreatorService.ManageInvoiceAsync(response);
+        }
+
+        private async Task<IEnumerable<Invoice>> applyInvoiceFormatFilter(HistoryRequest request, DateTime start, DateTime end)
+        {
             IEnumerable<Invoice> rawInvoices = new List<Invoice>();
 
             if (request.InvoiceFormat != InvoiceFormat.Unknown)
@@ -73,15 +88,7 @@ namespace Services
                 rawInvoices = await _invoiceRepository.GetInvoicesAsync(start, end, request.Skip, request.Take);
             }
 
-            List<HistoryResponse> response = _mapper.Map<IEnumerable<Invoice>, List<HistoryResponse>>(rawInvoices);
-
-            return response;
-        }
-
-        /// <inheritdoc />
-        public async Task<string> ManageInvoiceAsync(InvoiceResponse response)
-        {
-            return await _invoiceCreatorService.ManageInvoiceAsync(response);
+            return rawInvoices;
         }
 
         private async Task<DateTime> convertStringToDateTime(string date, string paramName)

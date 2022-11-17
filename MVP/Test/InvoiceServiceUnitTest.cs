@@ -43,7 +43,7 @@ namespace Test
             _invoiceCreatorServiceMock = new Mock<IInvoiceCreatorService>();
 
             _mapperMock = new Mock<IMapper>();
-            _mapperMock.Setup(x => x.Map<IEnumerable<Invoice>, List<HistoryResponse>>(rawInvoices))
+            _mapperMock.Setup(x => x.Map<IEnumerable<Invoice>, IEnumerable<HistoryResponse>>(rawInvoices))
                 .Returns(new List<HistoryResponse>() { new HistoryResponse() });
 
             _invoiceRepositoryMock = new Mock<IInvoiceRepository>();

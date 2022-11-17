@@ -20,8 +20,6 @@ namespace Tests
 
         private Mock<IEmailService> _emailServiceMock;
 
-        private Mock<IInvoiceCreatorService> _invoiceCreatorServiceMock;
-
         private Mock<IInvoiceRepository> _invoiceRepositoryMock;
 
         private Mock<IInvoiceBuilderFactory> _invoiceBuilderFactoryMock;
@@ -34,8 +32,6 @@ namespace Tests
         public void Setup()
         {
             _dateTime = DateTime.Now;
-
-            _invoiceCreatorServiceMock = new Mock<IInvoiceCreatorService>();
 
             _emailServiceMock = new Mock<IEmailService>();
 
