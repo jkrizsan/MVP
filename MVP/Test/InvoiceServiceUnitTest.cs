@@ -16,7 +16,7 @@ using Services.Exceptions;
 using AutoMapper;
 using Data;
 
-namespace Test
+namespace Tests
 {
     class InvoiceServiceUnitTest
     {

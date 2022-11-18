@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System;
 using Data;
 
-namespace Test
+namespace Tests
 {
     public class InvoiceProcessorServiceUnitTest
     {

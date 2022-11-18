@@ -4,7 +4,7 @@ using Services.Factories;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace Test
+namespace Tests
 {
     public class EmailDataFactoryUnitTest
     {
