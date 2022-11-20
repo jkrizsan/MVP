@@ -9,10 +9,17 @@ namespace Services
     public interface IInvoiceProcessorService
     {
         /// <summary>
-        /// Validate and map invoice request data
+        /// Validate the Invoice request data
         /// </summary>
-        /// <param name="requestDto"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        Task<InvoiceResponse> ValidateAndMapInvoiceAsync(InvoiceRequest requestDto);
+        Task ValidateInvoiceRequestAsync(InvoiceRequest request);
+
+        /// <summary>
+        /// Map invoice request data
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<InvoiceResponse> MapInvoiceAsync(InvoiceRequest request);
     }
 }

@@ -55,7 +55,9 @@ namespace API.Controllers
         {
             try
             {
-                InvoiceResponse invoiceResponse = await _invoiceProcessorService.ValidateAndMapInvoiceAsync(request);
+                await _invoiceProcessorService.ValidateInvoiceRequestAsync(request);
+
+                InvoiceResponse invoiceResponse = await _invoiceProcessorService.MapInvoiceAsync(request);
 
                 var response = await _invoiceService.ManageInvoiceAsync(invoiceResponse);
 

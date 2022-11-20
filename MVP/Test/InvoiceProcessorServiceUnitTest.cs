@@ -48,7 +48,7 @@ namespace Tests
                 EmailAddress = "something@something.com"
             };
 
-            var response = await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request);
+            var response = await _invoiceProcessorServic.MapInvoiceAsync(request);
 
             Assert.AreEqual(response.TotalPrices, 254);
             Assert.AreEqual(response.TotalTaxes, 54);
@@ -58,7 +58,7 @@ namespace Tests
         public async Task ValidateAndMapInvoiceAsync_RequestParamIsNull_Error()
         {
             Exception ex = Assert.ThrowsAsync<NullReferenceException>(async ()
-                => await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(null));
+                => await _invoiceProcessorServic.MapInvoiceAsync(null));
 
             Assert.That(ex.Message, Is.EqualTo(Constants.GetString(Constants.NullreferenceException, "request")));
         }
@@ -81,7 +81,7 @@ namespace Tests
             };
 
             ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
-                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+                await _invoiceProcessorServic.MapInvoiceAsync(request));
 
             Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.GetString(Constants.UnsupportedCountry, countryName)));
         }
@@ -104,13 +104,13 @@ namespace Tests
             };
 
             ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
-                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+                await _invoiceProcessorServic.MapInvoiceAsync(request));
 
             Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.GetString(Constants.UnsupportedProduct, productName)));
         }
 
         [Test]
-        public void ValidateAndMapInvoiceAsync_WithoutProduct_ValidationException()
+        public void ValidateInvoiceRequestAsync_WithoutProduct_ValidationException()
         {
             var request = new InvoiceRequest()
             {
@@ -121,13 +121,13 @@ namespace Tests
             };
 
             ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
-                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+                await _invoiceProcessorServic.ValidateInvoiceRequestAsync(request));
 
             Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.MissingProduct));
         }
 
         [Test]
-        public void ValidateAndMapInvoiceAsync_WithoutEmail_ValidationException()
+        public void ValidateInvoiceRequestAsync_WithoutEmail_ValidationException()
         {
             var request = new InvoiceRequest()
             {
@@ -141,13 +141,13 @@ namespace Tests
             };
 
             ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
-                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+                await _invoiceProcessorServic.ValidateInvoiceRequestAsync(request));
 
             Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.EmailAddressError));
         }
 
         [Test]
-        public void ValidateAndMapInvoiceAsync_WithWrongEmailAddress_ValidationException()
+        public void ValidateInvoiceRequestAsync_WithWrongEmailAddress_ValidationException()
         {
             var request = new InvoiceRequest()
             {
@@ -162,13 +162,13 @@ namespace Tests
             };
 
             ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
-                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+                await _invoiceProcessorServic.ValidateInvoiceRequestAsync(request));
 
             Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.EmailAddressError));
         }
 
         [Test]
-        public void ValidateAndMapInvoiceAsync_BadInvoiceFormat_ValidationException()
+        public void ValidateInvoiceRequestAsync_BadInvoiceFormat_ValidationException()
         {
             var request = new InvoiceRequest()
             {
@@ -183,7 +183,7 @@ namespace Tests
             };
 
             ValidationException ex = Assert.ThrowsAsync<ValidationException>(async () => 
-                await _invoiceProcessorServic.ValidateAndMapInvoiceAsync(request));
+                await _invoiceProcessorServic.ValidateInvoiceRequestAsync(request));
 
             Assert.That(ex.ErrorMessage, Is.EqualTo(Constants.InvalidInvoiceFormat));
         }

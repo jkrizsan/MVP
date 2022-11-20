@@ -25,8 +25,21 @@ namespace Services
             _productRepository = productRepository;
         }
 
+        public async Task ValidateInvoiceRequestAsync(InvoiceRequest request)
+        {
+            if (request is null)
+            {
+                throw new NullReferenceException(Constants.GetString(Constants.NullreferenceException, nameof(request)));
+            }
+
+            await ValidateEmailAddressAsync(request);
+            await ValidateInvoiceFormatAsync(request);
+            await ValidateProductAsync(request);
+        }
+
+
         /// <inheritdoc />
-        public async Task<InvoiceResponse> ValidateAndMapInvoiceAsync(InvoiceRequest request)
+        public async Task<InvoiceResponse> MapInvoiceAsync(InvoiceRequest request)
         {
             if (request is null)
             {
@@ -46,6 +59,38 @@ namespace Services
             return response;
         }
 
+        private async Task ValidateEmailAddressAsync(InvoiceRequest request)
+        {
+            if (string.IsNullOrEmpty(request.EmailAddress) || request.EmailAddress?.Contains(Constants.At) == false)
+            {
+                throw new ValidationException(Constants.EmailAddressError);
+            }
+        }
+
+        private async Task ValidateInvoiceFormatAsync(InvoiceRequest request)
+        {
+            if (request.InvoiceFormat == InvoiceFormat.Unknown)
+            {
+                throw new ValidationException(Constants.InvalidInvoiceFormat);
+            }
+        }
+
+        private async Task ValidateProductAsync(InvoiceRequest request)
+        {
+            if (request.Products is null || request.Products.Count.Equals(0))
+            {
+                throw new ValidationException(Constants.MissingProduct);
+            }
+        }
+
+        private async Task ValidateDBEntityAsync(object entity, string errorMsg, string entityName)
+        {
+            if (entity is null)
+            {
+                throw new ValidationException(Constants.GetString(errorMsg, entityName));
+            }
+        }
+
         private async Task MapSendEmailAsync(InvoiceRequest request, InvoiceResponse response)
         {
             response.SendEmail = request?.SendEmail ?? false;
@@ -53,39 +98,21 @@ namespace Services
 
         private async Task MapEmailAddressAsync(InvoiceRequest request, InvoiceResponse response)
         {
-            if (response.SendEmail && string.IsNullOrEmpty(request.EmailAddress)
-                || request.EmailAddress?.Contains(Constants.At) == false)
-            {
-                throw new ValidationException(Constants.EmailAddressError);
-            }
-
             response.EmailAddress = request.EmailAddress;
         }
 
         private async Task MapInvoiceFormatAsync(InvoiceRequest request, InvoiceResponse response)
         {
-            if (request.InvoiceFormat == InvoiceFormat.Unknown)
-            {
-                throw new ValidationException(Constants.InvalidInvoiceFormat);
-            }
-
             response.InvoiceFormat = request.InvoiceFormat;
         }
 
         private async Task MapProductAsync(InvoiceRequest request, InvoiceResponse response)
         {
-            if (request.Products is null || request.Products.Count.Equals(0))
-            {
-                throw new ValidationException(Constants.MissingProduct);
-            }
-
             foreach (var prod in request.Products)
             {
                 var prodFromDb = await _productRepository.GetByNameAsync(prod.Name);
-                if (prodFromDb is null)
-                {
-                    throw new ValidationException(Constants.GetString(Constants.UnsupportedProduct, prod.Name));
-                }
+
+                await ValidateDBEntityAsync(prodFromDb, Constants.UnsupportedProduct, prod.Name);
 
                 for (int i = 0; i < prod.Quantity; i++)
                 {
@@ -102,10 +129,7 @@ namespace Services
         {
             var country = await _countryRepository.GetByNameAsync(request.Country);
 
-            if (country is null)
-            {
-                throw new ValidationException(Constants.GetString(Constants.UnsupportedCountry, request.Country));
-            }
+            await ValidateDBEntityAsync(country, Constants.UnsupportedCountry, request.Country);
 
             response.Country = country;
         }
